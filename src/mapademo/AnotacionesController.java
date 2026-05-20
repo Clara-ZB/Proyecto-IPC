@@ -6,7 +6,9 @@ package mapademo;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ToggleGroup;
 
 /**
  * FXML Controller class
@@ -14,6 +16,9 @@ import javafx.fxml.Initializable;
  * @author Liz
  */
 public class AnotacionesController implements Initializable {
+
+    @FXML
+    private ToggleGroup tipoAnotacion;
 
     /**
      * Initializes the controller class.
