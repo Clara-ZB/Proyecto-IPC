@@ -38,9 +38,12 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -65,6 +68,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -352,6 +356,7 @@ public class FXMLDocumentController implements Initializable {
         // Asignamos el contentGroup como contenido del ScrollPane
         map_scrollpane.setContent(contentGroup);
 
+        
     }
 
     // =========================================================
@@ -486,6 +491,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void about(ActionEvent event) {
+        
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
 
         // Personalizamos el icono de la ventana del diálogo
@@ -497,6 +503,20 @@ public class FXMLDocumentController implements Initializable {
         mensaje.setTitle("Acerca de");
         mensaje.setHeaderText("IPC - 2026");
         mensaje.showAndWait(); // Bloquea hasta que el usuario cierra el diálogo
+        
+        
+//        // Prueba rapida Historial Versiones
+//        try {
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mapademo/Historial.fxml"));
+//            Parent root = fxmlLoader.load();
+//            Scene scene = new Scene(root, 600, 450);
+//            Stage stage = new Stage();
+//            stage.setScene(scene);
+//            stage.setTitle("Historial de sesiones");
+//            stage.initModality(Modality.APPLICATION_MODAL);
+//            stage.showAndWait();
+//        } catch (IOException e) {
+//        };
     }
 
     // =========================================================

@@ -16,12 +16,11 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.AnotacionesController">
    <center>
       <Pane prefHeight="255.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <TextArea layoutX="15.0" layoutY="14.0" prefHeight="222.0" prefWidth="570.0" promptText="Avistamiento de patos, pendiente inclinada a 200 metros..." />
+            <TextArea fx:id="descripcion" layoutX="15.0" layoutY="14.0" prefHeight="222.0" prefWidth="570.0" promptText="Avistamiento de patos, pendiente inclinada a 200 metros..." />
          </children>
       </Pane>
    </center>
@@ -35,8 +34,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="Guardar" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-            <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="Cancelar" GridPane.halignment="RIGHT" />
+            <Button fx:id="btnGuardar" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#Guardar" prefHeight="40.0" prefWidth="80.0" text="Guardar" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onMouseClicked="#Cancelar" prefHeight="40.0" prefWidth="80.0" text="Cancelar" GridPane.halignment="RIGHT" />
          </children>
       </GridPane>
    </bottom>
@@ -53,7 +52,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <RadioButton mnemonicParsing="false" text=" " GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <RadioButton fx:id="btnCirculo" mnemonicParsing="false" text=" " GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <toggleGroup>
                   <ToggleGroup fx:id="tipoAnotacion" />
                </toggleGroup>
@@ -61,17 +60,17 @@
                   <Circle fill="#1f93ff00" radius="14.0" stroke="BLACK" strokeType="INSIDE" />
                </graphic>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <RadioButton fx:id="btnPunto" mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <graphic>
                   <Circle fill="#948b8b" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                </graphic>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <RadioButton fx:id="btnLinea" mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <graphic>
                   <Line endX="-74.5" startX="-100.0" />
                </graphic>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <RadioButton fx:id="btnTexto" mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <graphic>
                   <TextField prefHeight="25.0" prefWidth="143.0" promptText="Zona peligrosa...">
                      <opaqueInsets>
