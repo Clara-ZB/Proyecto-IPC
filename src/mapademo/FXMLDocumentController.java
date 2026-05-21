@@ -377,7 +377,9 @@ private void refreshUserMenu() {
         a.showAndWait();
     }
     
-    private void cargarActividadesUsuario() {}
+    private void cargarActividadesUsuario() {
+        map_listview.getItems().setAll(app.getUserActivities());
+    }
     private void clearStats() {}
 
     // =========================================================
