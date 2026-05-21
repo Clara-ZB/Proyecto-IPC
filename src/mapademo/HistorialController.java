@@ -16,7 +16,7 @@ import upv.ipc.sportlib.Session;
 /**
  * FXML Controller class
  *
- * @author Liz
+ * @author Clara <clzahbal@etsinf.upv.es>
  */
 public class HistorialController implements Initializable {
     
