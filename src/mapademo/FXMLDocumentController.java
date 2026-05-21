@@ -28,6 +28,9 @@
 package mapademo;
 //Pruebaaaaaadaw
 //Doss
+import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.User;
+import upv.ipc.sportlib.Activity;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -114,6 +117,8 @@ public class FXMLDocumentController implements Initializable {
      * la imagen cargada.
      */
     private Pane mapPane;
+    
+    private final SportActivityApp app = SportActivityApp.getInstance();
 
     
     /** Menú contextual reutilizable para el clic derecho sobre el mapa. */
@@ -132,11 +137,12 @@ public class FXMLDocumentController implements Initializable {
 
     /** Lista lateral que muestra todos los POIs añadidos al mapa. */
     @FXML
-    private ListView<Poi> map_listview;
+    private ListView<Activity> map_listview;
 
     /** ScrollPane que envuelve el mapa y permite desplazarlo. */
     @FXML
     private ScrollPane map_scrollpane;
+    
 
     /**
      * Slider de zoom.
@@ -185,6 +191,7 @@ public class FXMLDocumentController implements Initializable {
     private Label lblAltMin;
     @FXML
     private Label lblAltMax;
+    
  
 
     // =========================================================
@@ -268,7 +275,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void listClicked(MouseEvent event) {
         // Obtenemos el POI seleccionado; si no hay ninguno, salimos
-        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
+        /*Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
         if (itemSelected == null) return;
 
         // ── Dimensiones del mapa con el zoom actual aplicado ──────────
@@ -306,8 +313,72 @@ public class FXMLDocumentController implements Initializable {
         final KeyFrame kf  = new KeyFrame(Duration.millis(500), kv1, kv2);
         timeline.getKeyFrames().add(kf);
         timeline.play(); // Inicia la animación (no bloquea el hilo de la UI)
-
+*/
     }
+    
+    /**
+ * Refresca el MenuButton del usuario según el estado de sesión.
+ * - Sin sesión: muestra "Identificarse" con opciones de login y registro.
+ * - Con sesión: muestra el nickname con opciones de perfil, historial y logout.
+ */
+private void refreshUserMenu() {
+    User u = app.getCurrentUser();
+    menuUsuario.getItems().clear();
+    if (u == null) {
+        // ── Estado: NO HAY SESIÓN ─────────────────────────────────
+        menuUsuario.setText("Identificarse");
+        MenuItem miLogin    = new MenuItem("Iniciar sesión");
+        MenuItem miRegister = new MenuItem("Registrarse");
+        miLogin.setOnAction(e -> openLoginDialog());
+        miRegister.setOnAction(e -> openRegisterDialog());
+        menuUsuario.getItems().addAll(miLogin, miRegister);
+        // Deshabilitamos botones que requieren sesión
+        btnAddActividad.setDisable(true);
+        btnActividadMensual.setDisable(true);
+        map_listview.getItems().clear();
+        clearStats();
+    } else {
+        // ── Estado: SESIÓN INICIADA ───────────────────────────────
+        menuUsuario.setText(u.getNickName());
+        MenuItem miPerfil    = new MenuItem("Modificar perfil");
+        MenuItem miHistorial = new MenuItem("Historial de sesiones");
+        MenuItem miLogout    = new MenuItem("Cerrar sesión");
+        miPerfil.setOnAction(e -> openPerfilDialog());
+        miHistorial.setOnAction(e -> openHistorialDialog());
+        miLogout.setOnAction(e -> {
+            app.logout();
+            refreshUserMenu();   
+        });
+        menuUsuario.getItems().addAll(miPerfil, miHistorial, miLogout);
+        // Habilitamos botones de sesión
+        btnAddActividad.setDisable(false);
+        btnActividadMensual.setDisable(false);
+        cargarActividadesUsuario();
+    }
+}
+
+    //Métodos auxiliares
+
+    private void openLoginDialog() {
+        showInfo("Aquí se abrirá el diálogo de login");
+    }
+    private void openRegisterDialog() {
+        showInfo("Aquí se abrirá el diálogo de registro");
+    }
+    private void openPerfilDialog() {
+        showInfo("Aquí se abrirá el diálogo de modificar perfil");
+    }
+    private void openHistorialDialog() {
+        showInfo("Aquí se abrirá el diálogo de historial de sesiones");
+    }
+    private void showInfo(String msg) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+        a.setHeaderText(null);
+        a.showAndWait();
+    }
+    
+    private void cargarActividadesUsuario() {}
+    private void clearStats() {}
 
     // =========================================================
     //  CONSTRUCCIÓN DEL MAPA
@@ -456,7 +527,7 @@ public class FXMLDocumentController implements Initializable {
                //  setCellFactory() define cómo se renderiza cada celda
         //  de forma independiente al modelo Poi.
         //  Aquí mostramos "CÓDIGO – Nombre" en cada fila.
-        map_listview.setCellFactory(listView -> new ListCell<Poi>() {
+        /*map_listview.setCellFactory(listView -> new ListCell<Poi>() {
             @Override
             protected void updateItem(Poi poi, boolean empty) {
                 // Siempre llamar a super primero (requerido por JavaFX)
@@ -471,11 +542,12 @@ public class FXMLDocumentController implements Initializable {
                     setText(poi.getCode() + " – " + poi.getPosition());
                 }
             }
-        });
+        });*/
 
         // ── Carga del mapa inicial ─────────────────────────────────────
         // El fichero se busca relativo al directorio de trabajo del proyecto.
         buildMap(new File("maps/upv.jpg"));
+        refreshUserMenu();
     }
 
     // =========================================================
@@ -593,7 +665,7 @@ public class FXMLDocumentController implements Initializable {
         // Mostramos el diálogo y esperamos la respuesta del usuario
         Optional<Poi> result = poiDialog.showAndWait();
 
-        if (result.isPresent()) {
+        /*if (result.isPresent()) {
             Poi poi = result.get();
 
             // FIX 1: confirmamos la posición como Point2D para compatibilidad
@@ -609,7 +681,7 @@ public class FXMLDocumentController implements Initializable {
             text.setX(x);
             text.setY(y);
             mapPane.getChildren().add(text);
-        }
+        }*/
     }
 
     // =========================================================
