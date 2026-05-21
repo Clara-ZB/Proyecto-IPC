@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
@@ -18,14 +19,32 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
    <center>
       <VBox prefHeight="556.0" prefWidth="853.0" stylesheets="@../resources/estilos.css">
          <children>
             <SplitPane fx:id="splitPane" dividerPositions="0.19699727024567792" VBox.vgrow="ALWAYS">
                <items>
-                  <ListView fx:id="map_listview" onMouseClicked="#listClicked" prefHeight="399.0" prefWidth="87.0" />
+                  <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button fx:id="btnAddActividad" mnemonicParsing="false" text="Añadir actividad" />
+                        <Label text="Actividades:" />
+                        <ListView fx:id="map_listview" onMouseClicked="#listClicked" prefHeight="250.0" prefWidth="87.0" />
+                        <Label text="Estadísticas:" />
+                        <VBox prefHeight="297.0" prefWidth="167.0">
+                           <children>
+                              <Label fx:id="lblDistancia" text="Distancia: -" />
+                              <Label fx:id="lblDuracion" text="Duración: -" />
+                              <Label fx:id="lblVelMedia" text="Vel. Media: -" />
+                              <Label fx:id="lblRitmo" text="Ritmo medio: -" />
+                              <Label fx:id="lblDesnivelPos" text="Desnivel +: -" />
+                              <Label fx:id="lblDesnivelNeg" text="Desnivel -: -" />
+                              <Label fx:id="lblAltMin" text="Altitud Min: -" />
+                              <Label fx:id="lblAltMax" text="Altitud Max: -" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
                   <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseMoved="#showPosition" pannable="true" prefHeight="398.0" prefWidth="358.0" vbarPolicy="ALWAYS">
                      <content>
                         <Pane>
@@ -57,11 +76,15 @@
               </menus>
             </MenuBar>
             <Button mnemonicParsing="false" onAction="#cambiarMapa" text="Cambiar mapa" />
+            <Button fx:id="btnActividadMensual" mnemonicParsing="false" text="Actividad Mensual" />
+            <HBox prefHeight="65.0" prefWidth="458.0" HBox.hgrow="ALWAYS" />
+            <MenuButton fx:id="menuUsuario" mnemonicParsing="false" text="Identificarse">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </MenuButton>
             <Region HBox.hgrow="ALWAYS" />
-            <Label text="Zoom" />
-            <Button mnemonicParsing="false" onAction="#zoomOut" text="-" />
-            <Slider fx:id="zoom_slider" HBox.hgrow="SOMETIMES" />
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#zoomIn" text="+" />
          </children>
          <BorderPane.margin>
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
@@ -69,8 +92,13 @@
       </HBox>
    </top>
    <bottom>
-      <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="841.0" BorderPane.alignment="CENTER">
          <children>
+            <Label text="Zoom" />
+            <Button mnemonicParsing="false" onAction="#zoomOut" text="-" />
+            <Slider fx:id="zoom_slider" />
+            <Button mnemonicParsing="false" onAction="#zoomIn" text="+" />
+            <HBox prefHeight="33.0" prefWidth="521.0" HBox.hgrow="ALWAYS" />
             <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " wrapText="true" HBox.hgrow="ALWAYS" />
          </children>
          <BorderPane.margin>

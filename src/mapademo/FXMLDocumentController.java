@@ -45,6 +45,7 @@ import javafx.scene.Parent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -160,6 +161,30 @@ public class FXMLDocumentController implements Initializable {
     private Label mousePosition;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    private Button btnActividadMensual;
+    @FXML
+    private MenuButton menuUsuario;
+    @FXML
+    private VBox sidePanel;
+    @FXML
+    private Button btnAddActividad;
+    @FXML
+    private Label lblDistancia;
+    @FXML
+    private Label lblDuracion;
+    @FXML
+    private Label lblVelMedia;
+    @FXML
+    private Label lblRitmo;
+    @FXML
+    private Label lblDesnivelPos;
+    @FXML
+    private Label lblDesnivelNeg;
+    @FXML
+    private Label lblAltMin;
+    @FXML
+    private Label lblAltMax;
  
 
     // =========================================================
