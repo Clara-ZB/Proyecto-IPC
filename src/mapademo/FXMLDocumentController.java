@@ -507,7 +507,7 @@ public class FXMLDocumentController implements Initializable {
         
 //        // Prueba rapida Historial Versiones
 //        try {
-//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mapademo/Historial.fxml"));
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
 //            Parent root = fxmlLoader.load();
 //            Scene scene = new Scene(root, 600, 450);
 //            Stage stage = new Stage();
