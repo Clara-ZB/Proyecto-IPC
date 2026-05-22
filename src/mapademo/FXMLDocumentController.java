@@ -28,6 +28,12 @@
 package mapademo;
 //Pruebaaaaaadaw
 //Doss
+import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.User;
+import upv.ipc.sportlib.Activity;
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -45,6 +51,7 @@ import javafx.scene.Parent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -70,7 +77,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -105,7 +112,7 @@ public class FXMLDocumentController implements Initializable {
 
     /** Group que se escala para aplicar el zoom. */
     private Group zoomGroup;
-
+    
     /**
      * Pane que actúa como lienzo del mapa.
      * Contiene la imagen de fondo y todos los elementos superpuestos
@@ -113,11 +120,13 @@ public class FXMLDocumentController implements Initializable {
      * la imagen cargada.
      */
     private Pane mapPane;
+    
+    private final SportActivityApp app = SportActivityApp.getInstance();
 
     
     /** Menú contextual reutilizable para el clic derecho sobre el mapa. */
     private ContextMenu mapContextMenu;
-
+    
 
     /**
      * Indica si el controlador está en modo inserción de POI.
@@ -131,11 +140,12 @@ public class FXMLDocumentController implements Initializable {
 
     /** Lista lateral que muestra todos los POIs añadidos al mapa. */
     @FXML
-    private ListView<Poi> map_listview;
+    private ListView<Activity> map_listview;
 
     /** ScrollPane que envuelve el mapa y permite desplazarlo. */
     @FXML
     private ScrollPane map_scrollpane;
+    
 
     /**
      * Slider de zoom.
@@ -160,6 +170,31 @@ public class FXMLDocumentController implements Initializable {
     private Label mousePosition;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    private Button btnActividadMensual;
+    @FXML
+    private MenuButton menuUsuario;
+    @FXML
+    private VBox sidePanel;
+    @FXML
+    private Button btnAddActividad;
+    @FXML
+    private Label lblDistancia;
+    @FXML
+    private Label lblDuracion;
+    @FXML
+    private Label lblVelMedia;
+    @FXML
+    private Label lblRitmo;
+    @FXML
+    private Label lblDesnivelPos;
+    @FXML
+    private Label lblDesnivelNeg;
+    @FXML
+    private Label lblAltMin;
+    @FXML
+    private Label lblAltMax;
+    
  
 
     // =========================================================
@@ -243,7 +278,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void listClicked(MouseEvent event) {
         // Obtenemos el POI seleccionado; si no hay ninguno, salimos
-        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
+        /*Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
         if (itemSelected == null) return;
 
         // ── Dimensiones del mapa con el zoom actual aplicado ──────────
@@ -281,7 +316,125 @@ public class FXMLDocumentController implements Initializable {
         final KeyFrame kf  = new KeyFrame(Duration.millis(500), kv1, kv2);
         timeline.getKeyFrames().add(kf);
         timeline.play(); // Inicia la animación (no bloquea el hilo de la UI)
+*/
+    }
+    
+    /**
+ * Refresca el MenuButton del usuario según el estado de sesión.
+ * - Sin sesión: muestra "Identificarse" con opciones de login y registro.
+ * - Con sesión: muestra el nickname con opciones de perfil, historial y logout.
+ */
+private void refreshUserMenu() {
+    User u = app.getCurrentUser();
+    menuUsuario.getItems().clear();
+    if (u == null) {
+        // ── Estado: NO HAY SESIÓN ─────────────────────────────────
+        menuUsuario.setText("Identificarse");
+        MenuItem miLogin    = new MenuItem("Iniciar sesión");
+        MenuItem miRegister = new MenuItem("Registrarse");
+        miLogin.setOnAction(e -> openLoginDialog());
+        miRegister.setOnAction(e -> openRegisterDialog());
+        menuUsuario.getItems().addAll(miLogin, miRegister);
+        // Deshabilitamos botones que requieren sesión
+        btnAddActividad.setDisable(true);
+        btnActividadMensual.setDisable(true);
+        map_listview.getItems().clear();
+        clearStats();
+    } else {
+        // ── Estado: SESIÓN INICIADA ───────────────────────────────
+        menuUsuario.setText(u.getNickName());
+        MenuItem miPerfil    = new MenuItem("Modificar perfil");
+        MenuItem miHistorial = new MenuItem("Historial de sesiones");
+        MenuItem miLogout    = new MenuItem("Cerrar sesión");
+        miPerfil.setOnAction(e -> openPerfilDialog());
+        miHistorial.setOnAction(e -> openHistorialDialog());
+        miLogout.setOnAction(e -> {
+            app.logout();
+            refreshUserMenu();   
+        });
+        menuUsuario.getItems().addAll(miPerfil, miHistorial, miLogout);
+        // Habilitamos botones de sesión
+        btnAddActividad.setDisable(false);
+        btnActividadMensual.setDisable(false);
+        cargarActividadesUsuario();
+    }
+}
 
+    private void initListActividades() {
+        map_listview.setCellFactory(lv -> new ListCell<Activity>() {
+            @Override
+            protected void updateItem(Activity a, boolean empty) {
+                super.updateItem(a, empty);
+                if (empty || a == null) {
+                    setText(null);
+                } else {
+                    String fecha = a.getStartTime()
+                    .atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yy"));
+                    setText(a.getName() + " . " + fecha);
+                }
+            }
+        });
+        
+        //Ahora al seleccionar una actividad
+        map_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
+            if (newAct != null) {
+                mostrarEstadisticas(newAct);
+            } else {
+                clearStats();
+            }
+        });
+    }
+    
+    private void mostrarEstadisticas(Activity a) {
+        lblDistancia.setText(String.format("%.2f km", a.getTotalDistance() / 1000.0));
+        lblDuracion.setText(formatDuration(a.getDuration()));
+        lblVelMedia.setText(String.format("%.1f km/h", a.getAverageSpeed()));
+        lblRitmo.setText(String.format("%.2f min/km", a.getAveragePace()));
+        lblDesnivelPos.setText(String.format("+%.0f m", a.getElevationGain()));
+        lblDesnivelNeg.setText(String.format("-%.0f m", a.getElevationLoss()));
+        lblAltMin.setText(String.format("%.0f m", a.getMinElevation()));
+    lblAltMax.setText(String.format("%.0f m", a.getMaxElevation()));
+    }
+
+    //Métodos auxiliares
+
+    private void openLoginDialog() {
+        showInfo("Aquí se abrirá el diálogo de login");
+    }
+    private void openRegisterDialog() {
+        showInfo("Aquí se abrirá el diálogo de registro");
+    }
+    private void openPerfilDialog() {
+        showInfo("Aquí se abrirá el diálogo de modificar perfil");
+    }
+    private void openHistorialDialog() {
+        showInfo("Aquí se abrirá el diálogo de historial de sesiones");
+    }
+    private void showInfo(String msg) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+        a.setHeaderText(null);
+        a.showAndWait();
+    }
+    
+    private void cargarActividadesUsuario() {
+        map_listview.getItems().setAll(app.getUserActivities());
+    }
+    private void clearStats() {
+        lblDistancia.setText("-");
+        lblDuracion.setText("-");
+        lblVelMedia.setText("-");
+        lblRitmo.setText("-");
+        lblDesnivelPos.setText("-");
+        lblDesnivelNeg.setText("-");
+        lblAltMin.setText("-");
+        lblAltMax.setText("-");
+    }
+    
+    private String formatDuration(Duration d) {
+        long h = d.toHours();
+        long m = d.toMinutesPart();
+        long s = d.toSecondsPart();
+        return String.format("%dh %02dm %02ds", h, m, s);
     }
 
     // =========================================================
@@ -431,7 +584,7 @@ public class FXMLDocumentController implements Initializable {
                //  setCellFactory() define cómo se renderiza cada celda
         //  de forma independiente al modelo Poi.
         //  Aquí mostramos "CÓDIGO – Nombre" en cada fila.
-        map_listview.setCellFactory(listView -> new ListCell<Poi>() {
+        /*map_listview.setCellFactory(listView -> new ListCell<Poi>() {
             @Override
             protected void updateItem(Poi poi, boolean empty) {
                 // Siempre llamar a super primero (requerido por JavaFX)
@@ -446,11 +599,12 @@ public class FXMLDocumentController implements Initializable {
                     setText(poi.getCode() + " – " + poi.getPosition());
                 }
             }
-        });
+        });*/
 
         // ── Carga del mapa inicial ─────────────────────────────────────
         // El fichero se busca relativo al directorio de trabajo del proyecto.
         buildMap(new File("maps/upv.jpg"));
+        refreshUserMenu();
     }
 
     // =========================================================
@@ -507,7 +661,7 @@ public class FXMLDocumentController implements Initializable {
         
 //        // Prueba rapida Historial Versiones
 //        try {
-//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mapademo/Historial.fxml"));
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
 //            Parent root = fxmlLoader.load();
 //            Scene scene = new Scene(root, 600, 450);
 //            Stage stage = new Stage();
@@ -517,19 +671,6 @@ public class FXMLDocumentController implements Initializable {
 //            stage.showAndWait();
 //        } catch (IOException e) {
 //        };
-        // Prueba rapida Registrarse
-        //try {
-            //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mapademo/Registrarse.fxml"));
-            //Parent pgRegistrar = fxmlLoader.load();
-            //Scene scene = new Scene(pgRegistrar, 400, 600);
-            //Stage stage = new Stage();
-            //stage.setScene(scene);
-            //stage.setTitle("Registro Usuario");
-            //stage.initModality(Modality.APPLICATION_MODAL);
-            //stage.showAndWait();
-        //} catch (IOException e) {
-            //e.printStackTrace();
-        }
     }
 
     // =========================================================
@@ -581,7 +722,7 @@ public class FXMLDocumentController implements Initializable {
         // Mostramos el diálogo y esperamos la respuesta del usuario
         Optional<Poi> result = poiDialog.showAndWait();
 
-        if (result.isPresent()) {
+        /*if (result.isPresent()) {
             Poi poi = result.get();
 
             // FIX 1: confirmamos la posición como Point2D para compatibilidad
@@ -597,7 +738,7 @@ public class FXMLDocumentController implements Initializable {
             text.setX(x);
             text.setY(y);
             mapPane.getChildren().add(text);
-        }
+        }*/
     }
 
     // =========================================================
