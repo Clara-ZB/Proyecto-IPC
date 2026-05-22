@@ -517,6 +517,19 @@ public class FXMLDocumentController implements Initializable {
 //            stage.showAndWait();
 //        } catch (IOException e) {
 //        };
+        // Prueba rapida Registrarse
+        //try {
+            //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mapademo/Registrarse.fxml"));
+            //Parent pgRegistrar = fxmlLoader.load();
+            //Scene scene = new Scene(pgRegistrar, 400, 600);
+            //Stage stage = new Stage();
+            //stage.setScene(scene);
+            //stage.setTitle("Registro Usuario");
+            //stage.initModality(Modality.APPLICATION_MODAL);
+            //stage.showAndWait();
+        //} catch (IOException e) {
+            //e.printStackTrace();
+        }
     }
 
     // =========================================================
