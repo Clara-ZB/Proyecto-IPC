@@ -31,6 +31,9 @@ package mapademo;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.User;
 import upv.ipc.sportlib.Activity;
+import java.time.Duration;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -74,7 +77,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -357,6 +360,42 @@ private void refreshUserMenu() {
     }
 }
 
+    private void initListActividades() {
+        map_listview.setCellFactory(lv -> new ListCell<Activity>() {
+            @Override
+            protected void updateItem(Activity a, boolean empty) {
+                super.updateItem(a, empty);
+                if (empty || a == null) {
+                    setText(null);
+                } else {
+                    String fecha = a.getStartTime()
+                    .atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yy"));
+                    setText(a.getName() + " . " + fecha);
+                }
+            }
+        });
+        
+        //Ahora al seleccionar una actividad
+        map_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
+            if (newAct != null) {
+                mostrarEstadisticas(newAct);
+            } else {
+                clearStats();
+            }
+        });
+    }
+    
+    private void mostrarEstadisticas(Activity a) {
+        lblDistancia.setText(String.format("%.2f km", a.getTotalDistance() / 1000.0));
+        lblDuracion.setText(formatDuration(a.getDuration()));
+        lblVelMedia.setText(String.format("%.1f km/h", a.getAverageSpeed()));
+        lblRitmo.setText(String.format("%.2f min/km", a.getAveragePace()));
+        lblDesnivelPos.setText(String.format("+%.0f m", a.getElevationGain()));
+        lblDesnivelNeg.setText(String.format("-%.0f m", a.getElevationLoss()));
+        lblAltMin.setText(String.format("%.0f m", a.getMinElevation()));
+    lblAltMax.setText(String.format("%.0f m", a.getMaxElevation()));
+    }
+
     //Métodos auxiliares
 
     private void openLoginDialog() {
@@ -380,7 +419,23 @@ private void refreshUserMenu() {
     private void cargarActividadesUsuario() {
         map_listview.getItems().setAll(app.getUserActivities());
     }
-    private void clearStats() {}
+    private void clearStats() {
+        lblDistancia.setText("-");
+        lblDuracion.setText("-");
+        lblVelMedia.setText("-");
+        lblRitmo.setText("-");
+        lblDesnivelPos.setText("-");
+        lblDesnivelNeg.setText("-");
+        lblAltMin.setText("-");
+        lblAltMax.setText("-");
+    }
+    
+    private String formatDuration(Duration d) {
+        long h = d.toHours();
+        long m = d.toMinutesPart();
+        long s = d.toSecondsPart();
+        return String.format("%dh %02dm %02ds", h, m, s);
+    }
 
     // =========================================================
     //  CONSTRUCCIÓN DEL MAPA
