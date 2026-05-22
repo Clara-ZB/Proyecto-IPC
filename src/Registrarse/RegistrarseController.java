@@ -71,6 +71,7 @@ public class RegistrarseController implements Initializable {
                 getClass().getResource("/resources/user.jpg").toExternalForm()
         );
         
+        
         avatar.setImage(avatarDefault);
         
         Circle circulo = new Circle();
@@ -118,6 +119,8 @@ public class RegistrarseController implements Initializable {
         String email = txtEmail.getText();
         String contraseña = txtContraseña.getText();
         LocalDate fecha_nacimiento = txtFechaNacimiento.getValue();
+        Image avatarImage = avatar.getImage();
+        boolean valido = true;
         
         if(!User.checkNickName(usuario)){
             errorUsuario.setText("Usuario inválido:entre 6 y 15 caracteres, solo letras, dígitos, guion o subguion.  ");
@@ -128,16 +131,23 @@ public class RegistrarseController implements Initializable {
             return;
         }
         if(!User.checkPassword(contraseña)){
-            errorContraseña.setText("Contraseña inválida:entre 8 y 20 caracteres, "
+            errorContraseña.setText("Contraseña inválida:entre 8 y 20 caracteres, " 
                     + "con al menos una mayúscula, una minúscula, un \n" +
                     "dígito y un símbolo (!@#$%&*()-+=)");
+            return;
         }
-        if(!User.isOlderThan(fecha_nacimiento, 12))
+        if(fecha_nacimiento == null || !User.isOlderThan(fecha_nacimiento, 12)){
+            errorFechaNacimiento.setText("");
+            valido = false;
+        }
+        if(!valido){
+            return;
+        }
         errorUsuario.setText("");
         errorEmail.setText("");
         errorContraseña.setText("");
         SportActivityApp app = SportActivityApp.getInstance();
-        //app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatar);
+        app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatarImage);
         System.out.println("Usuario registrado correctamente");
     }
     

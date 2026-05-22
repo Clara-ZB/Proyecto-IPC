@@ -671,6 +671,7 @@ private void refreshUserMenu() {
 //            stage.showAndWait();
 //        } catch (IOException e) {
 //        };
+     
     }
 
     // =========================================================
