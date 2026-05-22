@@ -73,10 +73,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import upv.ipc.sportlib.Annotation;
+import upv.ipc.sportlib.AnnotationType;
+import upv.ipc.sportlib.GeoPoint;
+import upv.ipc.sportlib.Session;
 
 
 /**
@@ -534,7 +539,7 @@ private void refreshUserMenu() {
         final double clickX = x;
         final double clickY = y;
         mapContextMenu.getItems().get(0).setOnAction(e -> addPoi(clickX, clickY));
-        mapContextMenu.getItems().get(1).setOnAction(e -> addCircle(clickX, clickY));
+        mapContextMenu.getItems().get(1).setOnAction(e -> addAnnotation(clickX, clickY));
 
         // Mostramos el menú en coordenadas de pantalla
         mapContextMenu.show(
@@ -578,8 +583,8 @@ private void refreshUserMenu() {
         // Los items se crean aquí sin acción; las acciones se asignan
         // en onMapRightClick() con las coordenadas correctas de cada clic.
         MenuItem miText   = new MenuItem("📝 Añadir texto");
-        MenuItem miCircle = new MenuItem("⭕ Añadir círculo");
-        mapContextMenu = new ContextMenu(miText, miCircle);
+        MenuItem miAnnotation = new MenuItem("📋 Añadir anotación");
+        mapContextMenu = new ContextMenu(miText, miAnnotation);
 
                //  setCellFactory() define cómo se renderiza cada celda
         //  de forma independiente al modelo Poi.
@@ -723,7 +728,7 @@ private void refreshUserMenu() {
         // Mostramos el diálogo y esperamos la respuesta del usuario
         Optional<Poi> result = poiDialog.showAndWait();
 
-        /*if (result.isPresent()) {
+        if (result.isPresent()) {
             Poi poi = result.get();
 
             // FIX 1: confirmamos la posición como Point2D para compatibilidad
@@ -731,7 +736,7 @@ private void refreshUserMenu() {
             poi.setPosition(new Point2D(x, y));
 
             // Añadimos el POI al ListView (la CellFactory mostrará nombre y código)
-            map_listview.getItems().add(poi);
+            //map_listview.getItems().add(poi);
 
             // FIX 1: usamos (x, y) tanto para el modelo como para el Text,
             // garantizando que la etiqueta aparezca exactamente donde se hizo clic.
@@ -739,7 +744,7 @@ private void refreshUserMenu() {
             text.setX(x);
             text.setY(y);
             mapPane.getChildren().add(text);
-        }*/
+        }
     }
 
     // =========================================================
@@ -771,6 +776,11 @@ private void refreshUserMenu() {
             map_listview.getItems().clear(); // Borramos los datos del mapa anterior
         }
     }
+    
+    public GeoPoint getPoint() {
+        GeoPoint point = new GeoPoint(mousePosition.getScene().getX(), mousePosition.getScene().getY());
+        return point;
+    }
 
     // =========================================================
     //  AÑADIR UN CÍRCULO AL MAPA
@@ -788,13 +798,61 @@ private void refreshUserMenu() {
      * @param x coordenada X en el sistema local del mapPane
      * @param y coordenada Y en el sistema local del mapPane
      */
-    private void addCircle(double x, double y) {
+    private void addCircle(double x, double y, Annotation anot) {
         Circle circle = new Circle(10, Color.RED); // radio = 10 px, color = rojo
+        circle.setCenterX(x);
+        circle.setCenterY(y);
+        circle.setFill(Color.TRANSPARENT);
+        mapPane.getChildren().add(circle); // Se añade sobre el mapa como cualquier nodo
+    }
+    
+    private void addPoint(double x, double y, Annotation anot) {
+        Circle circle = new Circle(3, Color.RED); // radio = 10 px, color = rojo
         circle.setCenterX(x);
         circle.setCenterY(y);
         mapPane.getChildren().add(circle); // Se añade sobre el mapa como cualquier nodo
     }
 
+    
+    private void addLine(double x, double y, Annotation anot) {
+        Line linea = new Line();
+        linea.setStartX(x - 10);
+        linea.setStartY(y);
+        linea.setEndX(x + 10);
+        linea.setEndY(y);
+        linea.setStroke(Color.BLUE);
+        mapPane.getChildren().add(linea);
+    }
+    /**
+     * Crea una ventana de Anotaciones para que le usuario cree su anotación
+     * y la añade al mapa en la posición elegida. 
+     * 
+     * @param x: coordenada x del click de ratón en el mapPane
+     * @param y: coordenada y del click de ratón en el mapPane
+     */
+    private void addAnnotation(double x, double y) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Anotaciones/Anotaciones.fxml"));
+            Parent root = (Parent) fxmlLoader.load(getClass().getResource("/Anotaciones/Anotaciones.fxml"));
+            Scene scene = new Scene(root, 600, 400);
+            Stage ventanaAnotación = new Stage();
+            ventanaAnotación.setScene(scene);
+            ventanaAnotación.setTitle("Nueva anotación");
+            ventanaAnotación.initModality(Modality.APPLICATION_MODAL);
+            ventanaAnotación.showAndWait();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        
+        SportActivityApp app = SportActivityApp.getInstance();
+        Annotation anotacionActual = app.getCurrentUser().getActivities().get(0).getAnnotations().getLast();
+        switch(anotacionActual.getType()) {
+            case AnnotationType.CIRCLE: addCircle(x, y, anotacionActual); break;
+            case AnnotationType.POINT: addPoint(x, y, anotacionActual); break;
+            case AnnotationType.LINE: addLine(x, y, anotacionActual); break;
+            case AnnotationType.TEXT: 
+        }
+    }
 
 
 }
