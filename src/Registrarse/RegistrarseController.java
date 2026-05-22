@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -20,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.User;
 
@@ -110,6 +112,9 @@ public class RegistrarseController implements Initializable {
 
     @FXML
     private void handleCancelar(ActionEvent event) {
+        Stage registro = (Stage)((Node)event.getSource()).getScene().getWindow();
+        registro.close();
+        
     }
 
     @FXML
@@ -122,19 +127,24 @@ public class RegistrarseController implements Initializable {
         Image avatarImage = avatar.getImage();
         boolean valido = true;
         
+        errorUsuario.setText("");
+        errorEmail.setText("");
+        errorContraseña.setText("");
+        errorFechaNacimiento.setText("");
+        
         if(!User.checkNickName(usuario)){
             errorUsuario.setText("Usuario inválido:entre 6 y 15 caracteres, solo letras, dígitos, guion o subguion.  ");
-            return;
+            valido = false;
         }
         if(!User.checkEmail(email)){
             errorEmail.setText("Formato inválido: usuario@dominio.");
-            return;
+            valido = false;
         }
         if(!User.checkPassword(contraseña)){
             errorContraseña.setText("Contraseña inválida:entre 8 y 20 caracteres, " 
                     + "con al menos una mayúscula, una minúscula, un \n" +
                     "dígito y un símbolo (!@#$%&*()-+=)");
-            return;
+            valido = false;
         }
         if(fecha_nacimiento == null || !User.isOlderThan(fecha_nacimiento, 12)){
             errorFechaNacimiento.setText("");
@@ -143,11 +153,12 @@ public class RegistrarseController implements Initializable {
         if(!valido){
             return;
         }
-        errorUsuario.setText("");
-        errorEmail.setText("");
-        errorContraseña.setText("");
+        //errorUsuario.setText("");
+        //errorEmail.setText("");
+        //errorContraseña.setText("");
         SportActivityApp app = SportActivityApp.getInstance();
         app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatarImage);
+        
         System.out.println("Usuario registrado correctamente");
     }
     
