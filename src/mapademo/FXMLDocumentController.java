@@ -28,6 +28,8 @@
 package mapademo;
 //Pruebaaaaaadaw
 //Doss
+import Anotaciones.AnotacionesController;
+import com.sun.javafx.collections.MapListenerHelper;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.User;
 import upv.ipc.sportlib.Activity;
@@ -42,6 +44,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,6 +77,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polyline;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -81,7 +85,10 @@ import javafx.stage.Stage;
 import upv.ipc.sportlib.Annotation;
 import upv.ipc.sportlib.AnnotationType;
 import upv.ipc.sportlib.GeoPoint;
+import upv.ipc.sportlib.MapProjection;
+import upv.ipc.sportlib.MapRegion;
 import upv.ipc.sportlib.Session;
+import upv.ipc.sportlib.TrackPoint;
 
 
 /**
@@ -322,6 +329,24 @@ public class FXMLDocumentController implements Initializable {
         timeline.getKeyFrames().add(kf);
         timeline.play(); // Inicia la animación (no bloquea el hilo de la UI)
 */
+        
+        // Cogemos la actividad seleccionada en la lista
+        Activity actividadActual = map_listview.getItems().get(map_listview.getSelectionModel().getSelectedIndex());
+        
+        // Definimos la region de la actividad, junto a su imagen y proyección
+        MapRegion region = actividadActual.getSuggestedMap();
+        Image img = new Image(new File(region.getImagePath()).toURI().toString());
+        MapProjection proj = new MapProjection(region, img.getWidth(), img.getHeight());
+        
+        // Creamos la ruta y le añadimos todos los puntos
+        Polyline ruta = new Polyline();
+        for (TrackPoint tp:actividadActual.getTrackPoints()) {
+            Point2D p = proj.project(tp);
+            ruta.getPoints().addAll(p.getX(), p.getY());
+        }
+        
+        // Añadimos la ruta al mapPane
+        mapPane.getChildren().add(ruta);
     }
     
     /**
@@ -777,6 +802,9 @@ private void refreshUserMenu() {
         }
     }
     
+    /**
+     * Este metodo aún esta por ver si se usará pero yo lo dejaría ahi por ahora por si acaso
+     */
     public GeoPoint getPoint() {
         GeoPoint point = new GeoPoint(mousePosition.getScene().getX(), mousePosition.getScene().getY());
         return point;
@@ -806,6 +834,13 @@ private void refreshUserMenu() {
         mapPane.getChildren().add(circle); // Se añade sobre el mapa como cualquier nodo
     }
     
+    /**
+     * Dibuja unn punto en las coordenadas con el color marcado en la anotación
+     * 
+     * @param x: coordenada x del click de ratón en el mapPane
+     * @param y: coordenada y del click de ratón en en mapPane
+     * @param anot: anotación que contiene todos los datos sobre la linea
+     */
     private void addPoint(double x, double y, Annotation anot) {
         Circle circle = new Circle(3, Color.RED); // radio = 10 px, color = rojo
         circle.setCenterX(x);
@@ -813,7 +848,13 @@ private void refreshUserMenu() {
         mapPane.getChildren().add(circle); // Se añade sobre el mapa como cualquier nodo
     }
 
-    
+    /**
+     * Dibuja una linea horizontal de 20px de longitud con el color marcado en la anotación
+     * 
+     * @param x: coordenada x del click de ratón en el mapPane
+     * @param y: coordenada y del click de ratón en en mapPane
+     * @param anot: anotación que contiene todos los datos sobre la linea
+     */
     private void addLine(double x, double y, Annotation anot) {
         Line linea = new Line();
         linea.setStartX(x - 10);
@@ -822,6 +863,25 @@ private void refreshUserMenu() {
         linea.setEndY(y);
         linea.setStroke(Color.BLUE);
         mapPane.getChildren().add(linea);
+    }
+    
+    /**
+     * Dibuja un texto sobre el mapa con los parametros de la anotación
+     * 
+     * @param x: coordenada x del click de ratón en el mapPane
+     * @param y: coordenada y del click de ratón en en mapPane
+     * @param anot: anotación que contiene todos los datos sobre la linea
+     */
+    private void addText(double x, double y, Annotation anot) {
+        Poi punto = new Poi(anot.getText(), x, y);
+        punto.setPosition(new Point2D(x, y));
+        
+        Text texto = new Text(punto.getCode());
+        texto.setStroke(Color.valueOf(anot.getColor()));
+        texto.setX(x);
+        texto.setY(y);
+        mapPane.getChildren().add(texto);
+        
     }
     /**
      * Crea una ventana de Anotaciones para que le usuario cree su anotación
@@ -840,17 +900,22 @@ private void refreshUserMenu() {
             ventanaAnotación.setTitle("Nueva anotación");
             ventanaAnotación.initModality(Modality.APPLICATION_MODAL);
             ventanaAnotación.showAndWait();
+            
+            AnotacionesController anot = fxmlLoader.getController();
+            //Falta añadir la anotación una vez la ventanaAnotación haya guardado
+            
+            SportActivityApp app = SportActivityApp.getInstance();
+            if (app.getCurrentUser() != null) {
+                Annotation anotacionActual = app.getCurrentUser().getActivities().get(0).getAnnotations().getLast(); //Esto se cambiará por la anotación definida anteriormente
+                switch(anotacionActual.getType()) {
+                    case AnnotationType.CIRCLE: addCircle(x, y, anotacionActual); break;
+                    case AnnotationType.POINT: addPoint(x, y, anotacionActual); break;
+                    case AnnotationType.LINE: addLine(x, y, anotacionActual); break;
+                    case AnnotationType.TEXT: addText(x, y, anotacionActual); break;
+                }
+            }
         } catch (IOException e) {
             System.out.println(e);
-        }
-        
-        SportActivityApp app = SportActivityApp.getInstance();
-        Annotation anotacionActual = app.getCurrentUser().getActivities().get(0).getAnnotations().getLast();
-        switch(anotacionActual.getType()) {
-            case AnnotationType.CIRCLE: addCircle(x, y, anotacionActual); break;
-            case AnnotationType.POINT: addPoint(x, y, anotacionActual); break;
-            case AnnotationType.LINE: addLine(x, y, anotacionActual); break;
-            case AnnotationType.TEXT: 
         }
     }
 
