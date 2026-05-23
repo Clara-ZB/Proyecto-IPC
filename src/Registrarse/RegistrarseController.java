@@ -162,7 +162,7 @@ public class RegistrarseController implements Initializable {
         boolean registrado = app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatarPath);
         
         if(registrado){
-            System.out.println("Usuario registtrado correctamente");
+            System.out.println("Usuario registrado correctamente");
         }else{
             errorUsuario.setText("El usuario ya existe");
         }
