@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
    <center>
       <VBox prefHeight="556.0" prefWidth="853.0" stylesheets="@../resources/estilos.css">
          <children>
@@ -27,7 +27,7 @@
                <items>
                   <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <Button fx:id="btnAddActividad" mnemonicParsing="false" text="Añadir actividad" />
+                        <Button fx:id="btnAddActividad" mnemonicParsing="false" onAction="#onAddActividad" text="Añadir actividad" />
                         <Label text="Actividades:" />
                         <ListView fx:id="map_listview" onMouseClicked="#listClicked" prefHeight="250.0" prefWidth="87.0" />
                         <Label text="Estadísticas:" />
@@ -76,7 +76,7 @@
               </menus>
             </MenuBar>
             <Button mnemonicParsing="false" onAction="#cambiarMapa" text="Cambiar mapa" />
-            <Button fx:id="btnActividadMensual" mnemonicParsing="false" text="Actividad Mensual" />
+            <Button fx:id="btnActividadMensual" mnemonicParsing="false" onAction="#onActividadMensual" text="Actividad Mensual" />
             <HBox prefHeight="65.0" prefWidth="458.0" HBox.hgrow="ALWAYS" />
             <MenuButton fx:id="menuUsuario" mnemonicParsing="false" text="Identificarse">
               <items>

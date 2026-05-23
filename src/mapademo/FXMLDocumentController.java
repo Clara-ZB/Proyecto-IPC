@@ -28,6 +28,9 @@
 package mapademo;
 //Pruebaaaaaadaw
 //Doss
+import java.time.YearMonth;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import Anotaciones.AnotacionesController;
 import com.sun.javafx.collections.MapListenerHelper;
 import upv.ipc.sportlib.SportActivityApp;
@@ -611,6 +614,10 @@ private void refreshUserMenu() {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        initListActividades();
+        clearStats();
+        refreshUserMenu();
+        
         // ── Configuración del slider de zoom ──────────────────────────
         zoom_slider.setMin(0.5);   // zoom mínimo: 50 %
         zoom_slider.setMax(1.5);   // zoom máximo: 150 %
@@ -998,4 +1005,82 @@ private void refreshUserMenu() {
         texto.setOpacity(0.75);
         return texto;
     } 
+
+    @FXML
+    private void onAddActividad(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+    fc.setTitle("Selecciona un fichero GPX");
+    fc.getExtensionFilters().add(
+        new FileChooser.ExtensionFilter("Ficheros GPX", "*.gpx"));
+    fc.setInitialDirectory(new File("."));
+
+    File gpx = fc.showOpenDialog(btnAddActividad.getScene().getWindow());
+    if (gpx == null) return;
+
+    try {
+        Activity nueva = app.importActivity(gpx);
+        if (nueva != null) {
+            map_listview.getItems().add(0, nueva);
+            map_listview.getSelectionModel().select(nueva);
+        } else {
+            showError("No se pudo importar el fichero GPX.");
+        }
+    } catch (Exception ex) {
+        showError("Error al procesar el GPX: " + ex.getMessage());
+    }
+    }
+    
+    private void showError(String msg) {
+    Alert a = new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK);
+    a.setHeaderText(null);
+    a.showAndWait();
+}
+
+    @FXML
+    private void onActividadMensual(ActionEvent event) {
+        User u = app.getCurrentUser();
+    if (u == null) return;
+
+    YearMonth mesActual = YearMonth.now();
+    ZoneId zone = ZoneId.systemDefault();
+
+    double distTotalM = 0;
+    Duration tiempoTotal = Duration.ZERO;
+    double ascensoTotal = 0;
+    double descensoTotal = 0;
+    int n = 0;
+
+    for (Activity a : app.getUserActivities()) {
+        YearMonth ym = YearMonth.from(a.getStartTime().atZone(zone));
+        if (ym.equals(mesActual)) {
+            distTotalM    += a.getTotalDistance();
+            tiempoTotal    = tiempoTotal.plus(a.getDuration());
+            ascensoTotal  += a.getElevationGain();
+            descensoTotal += a.getElevationLoss();
+            n++;
+        }
+    }
+
+    String mesNombre = mesActual.getMonth()
+        .getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
+
+    String contenido = String.format(
+        "Actividades este mes: %d%n" +
+        "Distancia acumulada: %.2f km%n" +
+        "Tiempo total: %s%n" +
+        "Desnivel + acumulado: %.0f m%n" +
+        "Desnivel - acumulado: %.0f m",
+        n,
+        distTotalM / 1000.0,
+        formatDuration(tiempoTotal),
+        ascensoTotal,
+        descensoTotal
+    );
+
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Actividad mensual");
+    alert.setHeaderText("Resumen de " + mesNombre + " " + mesActual.getYear());
+    alert.setContentText(contenido);
+    alert.showAndWait();
+    }
 }
