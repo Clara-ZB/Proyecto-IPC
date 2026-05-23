@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.util.Duration;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import upv.ipc.sportlib.Session;
 import upv.ipc.sportlib.SportActivityApp;
@@ -33,6 +34,7 @@ public class HistorialController implements Initializable {
     private int vistas;
     private int anotaciones;
     private ObservableList<Session> listaObs;
+    private int id;
     
     @FXML
     private ListView<Session> listaHist;
@@ -55,14 +57,20 @@ public class HistorialController implements Initializable {
         actividades = 0;
         vistas = 0;
         anotaciones = 0;
+        listaObs = null;
         SportActivityApp app = SportActivityApp.getInstance();
-        //recorro toda al lista para recalcular estadísticas globales y formar la listview
+        //recorro toda al lista para recalcular estadísticas globales 
         lista = app.getSessionsByUser(app.getCurrentUser());
-        for(int i =0; i < lista.size(); i++){
-            addSesion(lista.get(i));
+        listaObs.setAll(lista);
+        listaHist.setItems(listaObs);
+        listaHist.setCellFactory(c-> new sesListCell());
+        for(id =0; id < lista.size(); id++){
+            addSesion(lista.get(id));
+            listaObs.add(lista.get(id));
         }
+        
         actualizarTotales();
-    }    
+    }   
     
     /**
     * Añade una sesión al historial de sesiones
@@ -71,10 +79,6 @@ public class HistorialController implements Initializable {
     private void addSesion (Session s){
         java.time.Duration dur = s.getDuration();
         int act = s.getImportedActivities(), vista = s.getViewedActivities(), anot = s.getAnnotationsCreated();
-        /*CREAR ELEMENTO EN LISTA*/
-        
-        
-        
         /*ACTUALIZAR TOTALES*/
         horasT += dur.toHours();
         minTot += dur.toMinutes();
@@ -105,31 +109,38 @@ public class HistorialController implements Initializable {
         private final Label anotSesion = new Label();
 
         
-        public sesListCell() {
+        public sesListCell() {                      //contructor del elemento en lista, un grid con labels
             grid.setHgap(10);
             grid.setVgap(10);
-            grid.setPadding(new Insets(10));
+            grid.setPadding(new Insets(10));    //margenes internos
 
             grid.add(numSesion, 0, 0);
             grid.add(fechaSesion, 0, 1);
-            grid.add(durSesion, 1, 1);
-            grid.add(actSesion, 1, 2);
-            grid.add(vistasSesion, 0, 1);
-            grid.add(anotSesion, 1, 1);
-            //GridPane.setHalignment(quantityLabel, HPos.RIGHT);
+            grid.add(durSesion, 1, 0);
+            grid.add(actSesion, 1, 1);
+            grid.add(vistasSesion, 1, 2);
+            grid.add(anotSesion, 1, 3);
+            GridPane.setHalignment(durSesion, HPos.RIGHT);
+            GridPane.setHalignment(actSesion, HPos.RIGHT);
+            GridPane.setHalignment(vistasSesion, HPos.RIGHT);
+            GridPane.setHalignment(anotSesion, HPos.RIGHT);
         }
         
         
         @Override
         protected void updateItem(Session item, boolean empty) {
             super.updateItem(item, empty);
-            if (item == null || empty) {
+            if (item == null || empty) {//no hay nada que añadir
                 setText(null);
                 setGraphic(null);
-//            }else {
-//            view.setImage(item.getImagen());
-//            setGraphic(view);
-//            setText(item.getNombre());
+            }else {
+            setGraphic(grid);
+            numSesion.setText("Sesión " + id);
+            fechaSesion.setText(item.getStartTime().toString());
+            durSesion.setText(item.getDuration().toHours() + " h " + item.getDuration().toMinutes() + " m ");
+            actSesion.setText(item.getImportedActivities() + " actividades importadas");
+            vistasSesion.setText(item.getViewedActivities() + " actividades vistas");
+            anotSesion.setText(item.getAnnotationsCreated() + " anotaciones creadas");
         }
     }
         
