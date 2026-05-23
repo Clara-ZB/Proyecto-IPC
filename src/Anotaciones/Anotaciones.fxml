@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -85,14 +84,7 @@
             </RadioButton>
             <RadioButton fx:id="btnTexto" mnemonicParsing="false" text=" " toggleGroup="$tipoAnotacion" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <graphic>
-                  <TextField fx:id="graphText" prefHeight="25.0" prefWidth="143.0" promptText="Zona peligrosa...">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <padding>
-                        <Insets left="2.0" />
-                     </padding>
-                  </TextField>
+                  <Label fx:id="graphTexto" text="Descripción visible siempre" wrapText="true" />
                </graphic>
             </RadioButton>
             <Label text="Tipo de indicador:" GridPane.halignment="RIGHT">

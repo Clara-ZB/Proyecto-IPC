@@ -692,14 +692,13 @@ private void refreshUserMenu() {
 //        // Prueba rapida Historial Versiones
 //        try {
 //            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
-//            Parent root = fxmlLoader.load();
+//            Parent root = (Parent) fxmlLoader.load(getClass().getResource("/Historial/Historial.fxml"));
 //            Scene scene = new Scene(root, 600, 450);
-//            Stage stage = new Stage();
-//            stage.setScene(scene);
-//            stage.setTitle("Historial de sesiones");
-//            stage.initModality(Modality.APPLICATION_MODAL);
-//            stage.showAndWait();
-//        } catch (IOException e) {
+//            Stage ventanaHistorial = new Stage();
+//            ventanaHistorial.setScene(scene);
+//            ventanaHistorial.setTitle("Historial de sesiones");
+//            ventanaHistorial.initModality(Modality.APPLICATION_MODAL);
+//            ventanaHistorial.showAndWait();        } catch (IOException e) {
 //        };
      
     }

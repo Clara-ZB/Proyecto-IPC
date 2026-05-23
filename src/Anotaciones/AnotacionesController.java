@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -27,7 +28,7 @@ import upv.ipc.sportlib.*;
 /**
  * FXML Controller class
  *
- * @author Liz
+ * @author Clara <clzahbal@etsinf.upv.es>
  */
 public class AnotacionesController implements Initializable {
 
@@ -57,10 +58,11 @@ public class AnotacionesController implements Initializable {
     private Circle graphPunto;
     @FXML
     private Line graphLinea;
-    @FXML
-    private TextField graphText;
     
-    private int tipo;  //0 = circulo, 1 = punto, 2 = linea, 3 = texto
+    private GeoPoint geopunto;
+    @FXML
+    private Label graphTexto;
+    
     
     
     /**
@@ -69,37 +71,22 @@ public class AnotacionesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-
-    @FXML
-    private void Guardar(MouseEvent event) {
-        
-        if(btnCirculo.isSelected()){        //Segun el boton de seleccion creamos el tipo de anotación
-            tipo = 0;
-        } else if (btnPunto.isSelected()){
-            tipo = 1;
-        } else if (btnLinea.isSelected()){   //Linea atravesando la ruta en ese punto
-            tipo = 2;
-        }else{
-            tipo = 3;
-        }
-       
-//        ann = new Annotation(
-//        tipo, // tipo de anotación
-//        "Zona peligrosa", // texto (puede ser vacío)
-//        "#E74C3C", // color en formato CSS hex
-//        2.0, // grosor del trazo
-//        List.of() // puntos geográficos (ver tabla de tipos)
-//     );
-
-        guardarPresionado = true;
-        
+    }   
+    
+    /**
+     * 
+     * @param p GeoPoint del raton en el mapa
+     */
+    public void setGeoPoint(GeoPoint p){
+        geopunto = p;
     }
-
-    @FXML
-    private void Cancelar(MouseEvent event) {
-        guardarPresionado = false;
-        descripcion.getScene().getWindow().hide();
+    
+    /**
+     * Comprobar antes si se ha guardado
+     * @return Anotacion creada
+     */
+    public Annotation getAnnotation(){
+        return ann;
     }
     
     /**
@@ -110,39 +97,51 @@ public class AnotacionesController implements Initializable {
         return guardarPresionado;
     }
     
-    
-    /**
-     * 
-     * @return 0 = circulo, 1 = punto, 2 = linea, 3 = texto
-     */
-    public int getTipo(){
-        return tipo;
+    @FXML
+    private void Guardar(MouseEvent event) {
+
+        if (btnCirculo.isSelected()) {        //Segun el boton de seleccion creamos el tipo de anotación
+            ann = new Annotation(
+                    AnnotationType.CIRCLE, // tipo de anotación
+                    descripcion.getText(), // texto (puede ser vacío)
+                    btnColor.getValue().toString(), // color en formato CSS hex
+                    2.0, // grosor del trazo
+                    List.of(geopunto) // puntos geográficos (ver tabla de tipos)
+            );
+
+        } else if (btnPunto.isSelected()) {
+            ann = new Annotation(
+                    AnnotationType.POINT, // tipo de anotación
+                    descripcion.getText(), // texto (puede ser vacío)
+                    btnColor.getValue().toString(), // color en formato CSS hex
+                    2.0, // grosor del trazo
+                    List.of(geopunto) // puntos geográficos (ver tabla de tipos)
+            );
+        } else if (btnLinea.isSelected()) {   //Linea atravesando la ruta en ese punto
+            ann = new Annotation(
+                    AnnotationType.LINE, // tipo de anotación
+                    descripcion.getText(), // texto (puede ser vacío)
+                    btnColor.getValue().toString(), // color en formato CSS hex
+                    2.0, // grosor del trazo
+                    List.of(new GeoPoint(geopunto.getLatitude() -15, geopunto.getLongitude()+15), new GeoPoint(geopunto.getLatitude() +15, geopunto.getLongitude()-15)) // puntos geográficos (ver tabla de tipos)
+            );
+        } else { //Texto
+            ann = new Annotation(
+                    AnnotationType.TEXT, // tipo de anotación
+                    descripcion.getText(), // texto (puede ser vacío)
+                    btnColor.getValue().toString(), // color en formato CSS hex
+                    2.0, // grosor del trazo
+                    List.of(geopunto) // puntos geográficos (ver tabla de tipos)
+            );
+        }
+        guardarPresionado = true;
+
     }
-    
-    
-    /**
-     * 
-     * @return descripción de la anotación
-     */
-    public String getDesc(){
-        return descripcion.getText();
-    }
-    
-    /**
-     * 
-     * @return texto asociado al tipo 3
-     */
-    public String getTexto(){
-        return graphText.getText();
-    }
-    
-    
-    /**
-     * 
-     * @return color seleccionado
-     */
-    public Color getColor(){
-        return btnColor.getValue();
+
+    @FXML
+    private void Cancelar(MouseEvent event) {
+        guardarPresionado = false;
+        descripcion.getScene().getWindow().hide();
     }
 
     @FXML
@@ -151,6 +150,7 @@ public class AnotacionesController implements Initializable {
         graphCirculo.setStroke(col);
         graphPunto.setFill(col);
         graphLinea.setStroke(col);
+        graphTexto.setTextFill(col);
         //texto se podria con jlabel + foreground, pero hay que añadir otras librerias y mirar como implementar con  scenebuilder
     }
 }
