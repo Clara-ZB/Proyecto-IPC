@@ -28,8 +28,7 @@
             <Label text="Contraseña:" GridPane.rowIndex="2" />
             <TextField fx:id="txtUsuario" GridPane.columnIndex="1" />
             <TextField fx:id="txtContraseña" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Text fx:id="errorUsuario" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Text fx:id="errorContraseña" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Text fx:id="errorIS" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <HBox alignment="BOTTOM_CENTER" layoutX="17.0" layoutY="246.0" prefHeight="40.0" prefWidth="366.0" spacing="220.0">

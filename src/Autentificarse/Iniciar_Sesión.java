@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import upv.ipc.sportlib.SportActivityApp;
 
 /**
  * FXML Controller class
@@ -27,13 +28,11 @@ public class Iniciar_Sesión implements Initializable {
     @FXML
     private TextField txtContraseña;
     @FXML
-    private Text errorUsuario;
-    @FXML
-    private Text errorContraseña;
-    @FXML
     private Button btnCancelar;
     @FXML
     private Button btnIS;
+    @FXML
+    private Text errorIS;
 
     /**
      * Initializes the controller class.
@@ -45,12 +44,27 @@ public class Iniciar_Sesión implements Initializable {
 
     @FXML
     private void handleCancelar(ActionEvent event) {
-        Stage registro = (Stage)((Node)event.getSource()).getScene().getWindow();
-        registro.close();
+        Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
+        ventana.close();
     }
 
     @FXML
     private void handleIS(ActionEvent event) {
+        String usuario = txtUsuario.getText();
+        String contraseña = txtContraseña.getText();
+        
+        errorIS.setText("");
+        
+        SportActivityApp app = SportActivityApp.getInstance();
+        boolean ISCorrecto = app.login(usuario, contraseña);
+        
+        if(ISCorrecto){
+            System.out.println("Sesión iniciada correctamente");
+             Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
+            ventana.close();
+        }else{
+            errorIS.setText("Usuario o contraseña incorrectos");
+        }
         
     }
     
