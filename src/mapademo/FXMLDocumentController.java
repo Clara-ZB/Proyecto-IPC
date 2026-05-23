@@ -60,6 +60,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -216,6 +218,10 @@ public class FXMLDocumentController implements Initializable {
     private Label lblAltMin;
     @FXML
     private Label lblAltMax;
+    @FXML
+    private Button botonAltura;
+    @FXML
+    private LineChart<?, ?> mapaAltura;
     
  
 
@@ -368,6 +374,12 @@ public class FXMLDocumentController implements Initializable {
                 case AnnotationType.TEXT: addText(actual); break;
             }
         }
+        
+        XYChart.Series series = new XYChart.Series();
+        for (int i = 0; i < map_listview.getSelectionModel().getSelectedItem().getTrackPoints().size(); i++) {
+            series.getData().add(new XYChart.Data<>(i, map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getElevation()));
+        }
+        mapaAltura.getData().add(series);
     }
     
     /**
@@ -911,6 +923,8 @@ private void refreshUserMenu() {
         circle.setStrokeWidth(3);
         
         Label texto = crearLabelAnn(x, y, anot);
+        texto.setVisible(false);
+        mapPane.getChildren().add(texto);
         
         circle.setOnMouseClicked(event -> {
                 texto.setVisible(!texto.visibleProperty().get());
@@ -935,6 +949,8 @@ private void refreshUserMenu() {
         punto.setCenterY(anot.getGeoPoints().get(0).getLongitude());
         
         Label texto = crearLabelAnn(x, y, anot);
+        texto.setVisible(false);
+        mapPane.getChildren().add(texto);
         
         punto.setOnMouseClicked(event -> {
                 texto.setVisible(!texto.visibleProperty().get());
@@ -964,6 +980,8 @@ private void refreshUserMenu() {
         linea.setStroke(Color.valueOf(anot.getColor()));
         
         Label texto = crearLabelAnn(x2, y2, anot);
+        texto.setVisible(false);
+        mapPane.getChildren().add(texto);
         
         linea.setOnMouseClicked(event -> {
                 texto.setVisible(!texto.visibleProperty().get());
@@ -1093,5 +1111,12 @@ private void refreshUserMenu() {
     } catch (IOException ex) {
         showError("No se pudo abrir la actividad mensual.");
     }
+    }
+
+    @FXML
+    private void mostrarMapaAltura(ActionEvent event) {
+        mapaAltura.setVisible(!mapaAltura.visibleProperty().get());
+        if (mapaAltura.getHeight() < 50) { mapaAltura.setPrefHeight(200); } else mapaAltura.setPrefHeight(1);
+
     }
 }
