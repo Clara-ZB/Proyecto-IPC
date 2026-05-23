@@ -450,16 +450,60 @@ private void refreshUserMenu() {
     //Métodos auxiliares
 
     private void openLoginDialog() {
-        showInfo("Aquí se abrirá el diálogo de login");
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Autentificarse/Autentificarse.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Iniciar sesión");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        refreshUserMenu();
+    } catch (IOException ex) {
+        showError("No se pudo abrir el diálogo de login.");
+    }
     }
     private void openRegisterDialog() {
-        showInfo("Aquí se abrirá el diálogo de registro");
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Registrarse/Registrarse.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Registrarse");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        refreshUserMenu();
+    } catch (IOException ex) {
+        showError("No se pudo abrir el diálogo de registro.");
+    }
     }
     private void openPerfilDialog() {
-        showInfo("Aquí se abrirá el diálogo de modificar perfil");
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Modificar/Modificar.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Modificar perfil");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        refreshUserMenu();
+    } catch (IOException ex) {
+        showError("No se pudo abrir el diálogo de perfil.");
+    }
     }
     private void openHistorialDialog() {
-        showInfo("Aquí se abrirá el diálogo de historial de sesiones");
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Historial de sesiones");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        refreshUserMenu();
+    } catch (IOException ex) {
+        showError("No se pudo abrir el historial.");
+    }
     }
     private void showInfo(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
