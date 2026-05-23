@@ -1082,49 +1082,16 @@ private void refreshUserMenu() {
 
     @FXML
     private void onActividadMensual(ActionEvent event) {
-        User u = app.getCurrentUser();
-    if (u == null) return;
-
-    YearMonth mesActual = YearMonth.now();
-    ZoneId zone = ZoneId.systemDefault();
-
-    double distTotalM = 0;
-    Duration tiempoTotal = Duration.ZERO;
-    double ascensoTotal = 0;
-    double descensoTotal = 0;
-    int n = 0;
-
-    for (Activity a : app.getUserActivities()) {
-        YearMonth ym = YearMonth.from(a.getStartTime().atZone(zone));
-        if (ym.equals(mesActual)) {
-            distTotalM    += a.getTotalDistance();
-            tiempoTotal    = tiempoTotal.plus(a.getDuration());
-            ascensoTotal  += a.getElevationGain();
-            descensoTotal += a.getElevationLoss();
-            n++;
-        }
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ActividadMensual/ActividadMensual.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Actividad mensual");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    } catch (IOException ex) {
+        showError("No se pudo abrir la actividad mensual.");
     }
-
-    String mesNombre = mesActual.getMonth()
-        .getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
-
-    String contenido = String.format(
-        "Actividades este mes: %d%n" +
-        "Distancia acumulada: %.2f km%n" +
-        "Tiempo total: %s%n" +
-        "Desnivel + acumulado: %.0f m%n" +
-        "Desnivel - acumulado: %.0f m",
-        n,
-        distTotalM / 1000.0,
-        formatDuration(tiempoTotal),
-        ascensoTotal,
-        descensoTotal
-    );
-
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle("Actividad mensual");
-    alert.setHeaderText("Resumen de " + mesNombre + " " + mesActual.getYear());
-    alert.setContentText(contenido);
-    alert.showAndWait();
     }
 }
