@@ -8,14 +8,20 @@ import com.sun.javafx.scene.CameraHelper;
 import java.util.List;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import upv.ipc.sportlib.*;
 
 /**
@@ -43,6 +49,16 @@ public class AnotacionesController implements Initializable {
     private TextArea descripcion;
     private boolean guardarPresionado = false;
     private Annotation ann;
+    @FXML
+    private ColorPicker btnColor;
+    @FXML
+    private Circle graphCirculo;
+    @FXML
+    private Circle graphPunto;
+    @FXML
+    private Line graphLinea;
+    @FXML
+    private TextField graphText;
     /**
      * Initializes the controller class.
      */
@@ -57,16 +73,12 @@ public class AnotacionesController implements Initializable {
      
         if(btnCirculo.isSelected()){        //Segun el boton de seleccion creamos el tipo de anotación
             tipo = AnnotationType.CIRCLE;
-            List<GeoPoint> puntos = List.of();
         } else if (btnPunto.isSelected()){
             tipo = AnnotationType.POINT;
-            List<GeoPoint> puntos = List.of();
         } else if (btnLinea.isSelected()){   //Linea atravesando la ruta en ese punto
             tipo = AnnotationType.LINE;
-            List<GeoPoint> puntos = List.of();
         }else{
             tipo = AnnotationType.TEXT;
-            List<GeoPoint> puntos = List.of();
         }
         
         
@@ -93,5 +105,14 @@ public class AnotacionesController implements Initializable {
     
     public Annotation getAnn (){
         return ann;
+    }
+
+    @FXML
+    private void cambiarColor(ActionEvent event) {  //segun el color que se haya cambiado, los iconos cambian
+        Color col = btnColor.getValue();            
+        graphCirculo.setStroke(col);
+        graphPunto.setFill(col);
+        graphLinea.setStroke(col);
+        //texto se podria con jlabel + foreground, pero hay que añadir otras librerias y mirar como implementar con  scenebuilder
     }
 }
