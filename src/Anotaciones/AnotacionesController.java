@@ -59,6 +59,10 @@ public class AnotacionesController implements Initializable {
     private Line graphLinea;
     @FXML
     private TextField graphText;
+    
+    private int tipo;  //0 = circulo, 1 = punto, 2 = linea, 3 = texto
+    
+    
     /**
      * Initializes the controller class.
      */
@@ -69,42 +73,76 @@ public class AnotacionesController implements Initializable {
 
     @FXML
     private void Guardar(MouseEvent event) {
-        AnnotationType tipo;
-     
+        
         if(btnCirculo.isSelected()){        //Segun el boton de seleccion creamos el tipo de anotación
-            tipo = AnnotationType.CIRCLE;
+            tipo = 0;
         } else if (btnPunto.isSelected()){
-            tipo = AnnotationType.POINT;
+            tipo = 1;
         } else if (btnLinea.isSelected()){   //Linea atravesando la ruta en ese punto
-            tipo = AnnotationType.LINE;
+            tipo = 2;
         }else{
-            tipo = AnnotationType.TEXT;
+            tipo = 3;
         }
-        
-        
-        ann = new Annotation(
-        tipo, // tipo de anotación
-        "Zona peligrosa", // texto (puede ser vacío)
-        "#E74C3C", // color en formato CSS hex
-        2.0, // grosor del trazo
-        List.of() // puntos geográficos (ver tabla de tipos)
-     );
+       
+//        ann = new Annotation(
+//        tipo, // tipo de anotación
+//        "Zona peligrosa", // texto (puede ser vacío)
+//        "#E74C3C", // color en formato CSS hex
+//        2.0, // grosor del trazo
+//        List.of() // puntos geográficos (ver tabla de tipos)
+//     );
+
         guardarPresionado = true;
         
     }
 
     @FXML
     private void Cancelar(MouseEvent event) {
+        guardarPresionado = false;
         descripcion.getScene().getWindow().hide();
     }
     
-    
+    /**
+     * 
+     * @return boolean para saber si se ha guardado la anotación o no, true = presionado
+     */
     public boolean guardarPressed() {
         return guardarPresionado;
     }
     
-    public Annotation getAnn (){
-        return ann;
+    
+    /**
+     * 
+     * @return 0 = circulo, 1 = punto, 2 = linea, 3 = texto
+     */
+    public int getTipo(){
+        return tipo;
+    }
+    
+    
+    /**
+     * 
+     * @return descripción de la anotación
+     */
+    public String getDesc(){
+        return descripcion.getText();
+    }
+    
+    /**
+     * 
+     * @return texto asociado al tipo 3
+     */
+    public String getTexto(){
+        return graphText.getText();
+    }
+    
+    
+    /**
+     * 
+     * @return color seleccionado
+     */
+    public Color getColor(){
+        return btnColor.getValue();
     }
 
     @FXML
