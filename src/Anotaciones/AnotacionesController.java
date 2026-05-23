@@ -135,6 +135,7 @@ public class AnotacionesController implements Initializable {
             );
         }
         guardarPresionado = true;
+        descripcion.getScene().getWindow().hide();
 
     }
 
