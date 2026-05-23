@@ -61,6 +61,7 @@ public class RegistrarseController implements Initializable {
     private Text errorFechaNacimiento;
     @FXML
     private Text errorContraseña;
+    private String avatarPath = null;
     
     
 
@@ -103,6 +104,7 @@ public class RegistrarseController implements Initializable {
         File archivo = seleccionarAvatar.showOpenDialog(avatar.getScene().getWindow());
         
         if(archivo != null){
+            avatarPath = archivo.getAbsolutePath();
             Image imagen = new Image(archivo.toURI().toString());
             avatar.setImage(imagen);
         }
@@ -147,7 +149,7 @@ public class RegistrarseController implements Initializable {
             valido = false;
         }
         if(fecha_nacimiento == null || !User.isOlderThan(fecha_nacimiento, 12)){
-            errorFechaNacimiento.setText("");
+            errorFechaNacimiento.setText("Debes tener más de 12 años");
             valido = false;
         }
         if(!valido){
@@ -157,9 +159,13 @@ public class RegistrarseController implements Initializable {
         //errorEmail.setText("");
         //errorContraseña.setText("");
         SportActivityApp app = SportActivityApp.getInstance();
-        app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatarImage);
+        boolean registrado = app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatarPath);
         
-        System.out.println("Usuario registrado correctamente");
+        if(registrado){
+            System.out.println("Usuario registtrado correctamente");
+        }else{
+            errorUsuario.setText("El usuario ya existe");
+        }
     }
     
     

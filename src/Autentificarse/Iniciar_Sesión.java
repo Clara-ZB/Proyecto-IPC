@@ -9,9 +9,11 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -43,10 +45,13 @@ public class Iniciar_Sesión implements Initializable {
 
     @FXML
     private void handleCancelar(ActionEvent event) {
+        Stage registro = (Stage)((Node)event.getSource()).getScene().getWindow();
+        registro.close();
     }
 
     @FXML
     private void handleIS(ActionEvent event) {
+        
     }
     
 }
