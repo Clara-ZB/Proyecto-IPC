@@ -103,7 +103,7 @@
             <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomIn" prefWidth="28.0" text="+" />
             <HBox prefHeight="33.0" prefWidth="521.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="botonAltura" mnemonicParsing="false" onAction="#mostrarMapaAltura" prefWidth="100.0" text="Altura" />
+                  <Button fx:id="botonAltura" minWidth="-Infinity" mnemonicParsing="false" onAction="#mostrarMapaAltura" prefWidth="50.0" text="Altura" />
                   <LineChart fx:id="mapaAltura" minHeight="-Infinity" prefHeight="1.0" visible="false">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
@@ -113,6 +113,7 @@
                     </yAxis>
                   </LineChart>
                </children></HBox>
+            <Label fx:id="velLabel" minWidth="-Infinity" prefWidth="45.0" text="vel:        " />
             <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " wrapText="true" HBox.hgrow="ALWAYS" />
          </children>
          <BorderPane.margin>

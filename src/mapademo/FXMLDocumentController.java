@@ -222,6 +222,10 @@ public class FXMLDocumentController implements Initializable {
     private Button botonAltura;
     @FXML
     private LineChart<?, ?> mapaAltura;
+    @FXML
+    private Label velLabel;
+    
+    List<GeoPoint> puntosRuta = null;
     
  
 
@@ -380,6 +384,13 @@ public class FXMLDocumentController implements Initializable {
             series.getData().add(new XYChart.Data<>(i, map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getElevation()));
         }
         mapaAltura.getData().add(series);
+        
+        //Paso la lista de TrackPoints a una lista de GeoPoints para poder trabajar con ella
+        //Esto no lo uso aqui se usa en showPosition() pero como tenga que crear la lista cada vez que mueves el raton esto va a gastar mas CPU que minar crypto
+        puntosRuta = null;
+        for (int i=0; i < map_listview.getSelectionModel().getSelectedItem().getTrackPoints().size(); i++) {
+            puntosRuta.add(new GeoPoint((int) map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getLatitude(),(int) map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getLongitude()));
+        }
     }
     
     /**
@@ -738,6 +749,19 @@ private void refreshUserMenu() {
             "         X: " + (int) event.getX() +
             ",          Y: " + (int) event.getY()
         );
+        
+        GeoPoint posActual = new GeoPoint(event.getSceneX(), event.getSceneY());
+        if (puntosRuta.contains(posActual)) {
+            /**Esto es probablemente la linea de codigo mas larga que he escrito en mi vida asique sientate que te intento explicar como funciona
+            *Actualizo la etiqueta vel usando la velocidad entre el punto actual del ratón y el siguiente punto de la ruta
+            *Podemos sacar el indice del punto actual en la List<TrackPoint> porque al definir la lista de Geopoints se hizo de forma que los indices coincidieran
+            *Por lo que si hago un valueOf() del posActual me devuelve el indice donde en la List<TrackPoint> esta el punto donde puedo consultar la velocidad
+            */
+            velLabel.setText("vel: " + map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(puntosRuta.indexOf(posActual)).speedTo(map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(puntosRuta.indexOf(posActual))));
+        } else {
+            velLabel.setText("vel:      ");
+        }
+        
     }
 
     // =========================================================
@@ -764,7 +788,11 @@ private void refreshUserMenu() {
         );
 
         mensaje.setTitle("Acerca de");
-        mensaje.setHeaderText("IPC - 2026");
+        mensaje.setHeaderText("Creado por: \n"
+                + "     Clara Lorena Zaharia Balán \n"
+                + "     Marcos Yerbes Martínez \n"
+                + "     Marta Bauza Medrano \n"
+                + "     Javier López Bellver");
         mensaje.showAndWait(); // Bloquea hasta que el usuario cierra el diálogo
         
         
