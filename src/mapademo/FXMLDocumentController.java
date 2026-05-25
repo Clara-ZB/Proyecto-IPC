@@ -89,7 +89,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -281,36 +280,6 @@ public class FXMLDocumentController implements Initializable {
         map_scrollpane.setVvalue(scrollV);
     }
 
-    // =========================================================
-    //  SELECCIÓN EN EL LISTVIEW → CENTRADO EN EL MAPA
-    // =========================================================
-
-    /**
-     * Se ejecuta cuando el usuario hace clic en un elemento del ListView.
-     *
-     * Objetivo: centrar el ScrollPane sobre la posición del POI seleccionado
-     * con una animación suave de 500 ms, y mover el pin al punto.
-     *
-     * Cálculo del scroll
-     * ------------------
-     * El ScrollPane expresa su posición como valores normalizados [0, 1]:
-     *   · hValue = 0 → extremo izquierdo
-     *   · hValue = 1 → extremo derecho
-     *
-     * Para centrar el POI necesitamos:
-     *
-     *   scrollH = (poiX_escalado - viewportAncho / 2)
-     *             ─────────────────────────────────────
-     *             (mapaAncho_escalado - viewportAncho)
-     *
-     * Aplicamos clamp para no salir del rango [0, 1].
-     *
-     * @param event evento de ratón sobre el ListView
-     */
-    @FXML
-    void listClicked(MouseEvent event) {
-        //Movemos la lógica a los métodos pintarRutaEnMapa y pintarPerfilAltitud
-    }
     
     /**
  * Refresca el MenuButton del usuario según el estado de sesión.
@@ -371,6 +340,7 @@ private void refreshUserMenu() {
         //Ahora al seleccionar una actividad
         map_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null) {
+                if (oldAct != null) mapPane.getChildren().subList(1, mapPane.getChildren().size()-1).clear();
                 mostrarEstadisticas(newAct);
                 pintarRutaEnMapa(newAct);
                 pintarPerfilAltitud(newAct);
@@ -388,73 +358,70 @@ private void refreshUserMenu() {
         lblDesnivelPos.setText(String.format("+%.0f m", a.getElevationGain()));
         lblDesnivelNeg.setText(String.format("-%.0f m", a.getElevationLoss()));
         lblAltMin.setText(String.format("%.0f m", a.getMinElevation()));
-    lblAltMax.setText(String.format("%.0f m", a.getMaxElevation()));
+        lblAltMax.setText(String.format("%.0f m", a.getMaxElevation()));
     }
 
     //Métodos auxiliares
-
     private void openLoginDialog() {
         try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Autentificarse/Iniciar Sesión.fxml"));
-        Parent root = (Parent) loader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Iniciar sesión");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        refreshUserMenu();
-    } catch (IOException ex) {
-        showError("No se pudo abrir el diálogo de login.");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Autentificarse/Iniciar Sesión.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Iniciar sesión");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            refreshUserMenu();
+        } catch (IOException ex) {
+            showError("No se pudo abrir el diálogo de login.");
+        }
     }
-    }
+
     private void openRegisterDialog() {
         try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Registrarse/Registrarse.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Registrarse");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        refreshUserMenu();
-    } catch (IOException ex) {
-        showError("No se pudo abrir el diálogo de registro.");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Registrarse/Registrarse.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Registrarse");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            refreshUserMenu();
+        } catch (IOException ex) {
+            showError("No se pudo abrir el diálogo de registro.");
+        }
     }
-    }
+
     private void openPerfilDialog() {
         try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Modificar/Modificar.fxml"));
-        Parent root = (Parent) loader.load();
-        Scene scene = new Scene(root, 400, 600);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Modificar perfil");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        refreshUserMenu();
-    } catch (IOException ex) {
-        showError("No se pudo abrir el diálogo de perfil.");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Modificar/Modificar.fxml"));
+            Parent root = (Parent) loader.load();
+            Scene scene = new Scene(root, 400, 600);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Modificar perfil");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            refreshUserMenu();
+        } catch (IOException ex) {
+            showError("No se pudo abrir el diálogo de perfil.");
+        }
     }
-    }
+
     private void openHistorialDialog() {
         try {
-          FXMLLoader loader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
-          Parent root = (Parent) loader.load();
-          Scene scene = new Scene(root);
-          Stage stage = new Stage();
-          stage.setScene(scene);
-          stage.setTitle("Historial de sesiones");
-          stage.initModality(Modality.APPLICATION_MODAL);
-          stage.showAndWait();
-          refreshUserMenu();
-    } catch (IOException ex) {
-        showError("No se pudo abrir el historial.");
-    }
-    }
-    private void showInfo(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
-        a.setHeaderText(null);
-        a.showAndWait();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
+            Parent root = (Parent) loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Historial de sesiones");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            refreshUserMenu();
+        } catch (IOException ex) {
+            showError("No se pudo abrir el historial.");
+        }
     }
     
     private void cargarActividadesUsuario() {
@@ -673,6 +640,9 @@ private void refreshUserMenu() {
             ",          Y: " + (int) event.getY()
         );
         
+        
+        //Felicidades!!! has encontrado un easter egg
+        //Este codigo no hace nada y por lo tanto, la Label que lo utilizaba se ha dejado invisible. Pero el codigo sigue ahi como un recordatorio de nuestro intento ;)
         if (puntosRuta == null) return;
         GeoPoint posActual = new GeoPoint(event.getSceneX(), event.getSceneY());
         if (puntosRuta.contains(posActual)) {
@@ -681,7 +651,7 @@ private void refreshUserMenu() {
             *Podemos sacar el indice del punto actual en la List<TrackPoint> porque al definir la lista de Geopoints se hizo de forma que los indices coincidieran
             *Por lo que si hago un valueOf() del posActual me devuelve el indice donde en la List<TrackPoint> esta el punto donde puedo consultar la velocidad
             */
-            velLabel.setText("vel: " + map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(puntosRuta.indexOf(posActual)).speedTo(map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(puntosRuta.indexOf(posActual))));
+            velLabel.setText("vel: " + map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(puntosRuta.indexOf(posActual)).speedTo(map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(puntosRuta.indexOf(posActual)+1)));
         } else {
             velLabel.setText("vel:      ");
         }
@@ -713,10 +683,10 @@ private void refreshUserMenu() {
 
         mensaje.setTitle("Acerca de");
         mensaje.setHeaderText("Creado por: \n"
-                + "     Clara Lorena Zaharia Balán \n"
-                + "     Marcos Yerbes Martínez \n"
-                + "     Marta Bauzá Medrano \n"
-                + "     Javier López Bellver");
+                + "     Clara Lorena Zaharia Balán 🌟 \n"
+                + "     Marcos Yerbes Martínez ✍️🔥🔥 \n"
+                + "     Marta Bauza Medrano 🎢\n"
+                + "     Javier López Bellver 🙏");
         mensaje.showAndWait(); // Bloquea hasta que el usuario cierra el diálogo
         
         
@@ -838,14 +808,7 @@ private void refreshUserMenu() {
             map_listview.getItems().clear(); // Borramos los datos del mapa anterior
         }
     }
-    
-    /**
-     * Este metodo aún esta por ver si se usará pero yo lo dejaría ahi por ahora por si acaso
-     */
-    public GeoPoint getPoint() {
-        GeoPoint point = new GeoPoint(mousePosition.getScene().getX(), mousePosition.getScene().getY());
-        return point;
-    }
+
 
     // =========================================================
     //  AÑADIR UN CÍRCULO AL MAPA
@@ -978,7 +941,6 @@ private void refreshUserMenu() {
                 notLogged.showAndWait();
                 return;
             }
-            
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Anotaciones/Anotaciones.fxml"));
             Parent root = (Parent) fxmlLoader.load();
             Scene scene = new Scene(root, 600, 400);
@@ -1103,7 +1065,8 @@ private void refreshUserMenu() {
         }
     }
 
-    
+    //Felicidades!!! Has encontrado la segunda parte del Easter egg
+    //Este codigo se usaba para definir la lista que se utilizaba en showPosition, pero ahora está aqui cogiendo polvo D:
     puntosRuta = new java.util.ArrayList<>();
     for (TrackPoint tp : actividadActual.getTrackPoints()) {
         puntosRuta.add(new GeoPoint(

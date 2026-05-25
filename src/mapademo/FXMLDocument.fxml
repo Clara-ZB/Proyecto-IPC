@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -32,7 +31,7 @@
                      <children>
                         <Button fx:id="btnAddActividad" mnemonicParsing="false" onAction="#onAddActividad" text="Añadir actividad" />
                         <Label text="Actividades:" />
-                        <ListView fx:id="map_listview" onMouseClicked="#listClicked" prefHeight="250.0" prefWidth="87.0" />
+                        <ListView fx:id="map_listview" prefHeight="250.0" prefWidth="87.0" />
                         <Label text="Estadísticas:" />
                         <VBox prefHeight="297.0" prefWidth="167.0">
                            <children>
