@@ -47,7 +47,7 @@ public class HistorialController implements Initializable {
     private Label vistasTxt;
     @FXML
     private Label anotTxt;
-
+     
     /**
      * Inicializa las estadísticas totales
      */
@@ -57,20 +57,20 @@ public class HistorialController implements Initializable {
         minTot = 0;
         actividades = 0;
         vistas = 0;
-        anotaciones = 0;
-        listaObs = null;
+        anotaciones = 0; 
+        listaHist.getItems().clear();
+        listaHist.setCellFactory(c-> new sesListCell()); 
         //recorro toda al lista para recalcular estadísticas globales 
         lista = app.getSessionsByUser(app.getCurrentUser());
-        listaObs.setAll(lista);
-        listaHist.setItems(listaObs);
-        listaHist.setCellFactory(c-> new sesListCell());
+        
         for(id =0; id < lista.size(); id++){
             addSesion(lista.get(id));
-            listaObs.add(lista.get(id));
-        }
-        
+       }
+        listaHist.getItems().setAll(app.getSessionsByUser(app.getCurrentUser()));
         actualizarTotales();
     }   
+    
+    
     
     /**
     * Añade una sesión al historial de sesiones
@@ -98,7 +98,7 @@ public class HistorialController implements Initializable {
         anotTxt.setText(anotaciones + " anotaciones creadas");
     }
     
-    class sesListCell extends ListCell<Session> {
+      private class sesListCell extends ListCell<Session> {
         
         private final GridPane grid = new GridPane();
         private final Label numSesion = new Label();
@@ -110,6 +110,7 @@ public class HistorialController implements Initializable {
 
         
         public sesListCell() {                      //contructor del elemento en lista, un grid con labels
+            super();
             grid.setHgap(10);
             grid.setVgap(10);
             grid.setPadding(new Insets(10));    //margenes internos
@@ -135,14 +136,15 @@ public class HistorialController implements Initializable {
                 setGraphic(null);
             }else {
             setGraphic(grid);
-            numSesion.setText("Sesión " + id);
+            numSesion.setText("Sesión " + getListView().getItems().size());
             fechaSesion.setText(item.getStartTime().toString());
             durSesion.setText(item.getDuration().toHours() + " h " + item.getDuration().toMinutes() + " m ");
             actSesion.setText(item.getImportedActivities() + " actividades importadas");
             vistasSesion.setText(item.getViewedActivities() + " actividades vistas");
             anotSesion.setText(item.getAnnotationsCreated() + " anotaciones creadas");
         }
-    }
-        
+     } 
     
-}}
+      }
+}     
+    

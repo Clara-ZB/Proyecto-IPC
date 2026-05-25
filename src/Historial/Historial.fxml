@@ -16,7 +16,7 @@
     <RowConstraints maxHeight="194.0" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ListView fx:id="listaSes" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="listaHist" prefHeight="200.0" prefWidth="200.0" />
       <GridPane GridPane.rowIndex="1">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
