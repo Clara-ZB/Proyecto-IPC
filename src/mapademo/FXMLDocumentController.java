@@ -689,7 +689,6 @@ private void refreshUserMenu() {
                 + "     Javier López Bellver 🙏");
         mensaje.showAndWait(); // Bloquea hasta que el usuario cierra el diálogo
         
-        
 //        // Prueba rapida Historial Versiones
 //        try {
 //            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
