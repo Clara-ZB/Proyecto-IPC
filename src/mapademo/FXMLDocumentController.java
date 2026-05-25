@@ -474,8 +474,8 @@ private void refreshUserMenu() {
 
     private void openLoginDialog() {
         try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Autentificarse/Autentificarse.fxml"));
-        Parent root = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Autentificarse/Iniciar Sesión.fxml"));
+        Parent root = (Parent) loader.load();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.setTitle("Iniciar sesión");
@@ -503,9 +503,10 @@ private void refreshUserMenu() {
     private void openPerfilDialog() {
         try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Modificar/Modificar.fxml"));
-        Parent root = loader.load();
+        Parent root = (Parent) loader.load();
+         Scene scene = new Scene(root, 600, 400);
         Stage stage = new Stage();
-        stage.setScene(new Scene(root));
+        stage.setScene(scene);
         stage.setTitle("Modificar perfil");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();

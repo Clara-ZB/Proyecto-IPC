@@ -153,6 +153,7 @@ public class RegistrarseController implements Initializable {
             valido = false;
         }
         if(!valido){
+            
             return;
         }
         //errorUsuario.setText("");
@@ -163,6 +164,8 @@ public class RegistrarseController implements Initializable {
         
         if(registrado){
             System.out.println("Usuario registrado correctamente");
+            Stage registro = (Stage)((Node)event.getSource()).getScene().getWindow();
+            registro.close();
         }else{
             errorUsuario.setText("El usuario ya existe");
         }

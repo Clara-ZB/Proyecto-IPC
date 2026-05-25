@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane id="AnchorPane" fx:id="pgRegistrar" prefHeight="600.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="mapademo.RegistrarseController">
+<AnchorPane id="AnchorPane" fx:id="pgRegistrar" prefHeight="600.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="Registrarse.RegistrarseController">
    <children>
       <HBox alignment="TOP_CENTER" layoutX="61.0" layoutY="176.0" prefHeight="58.0" prefWidth="278.0" spacing="20.0">
          <children>
