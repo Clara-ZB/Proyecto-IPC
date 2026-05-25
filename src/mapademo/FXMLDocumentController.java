@@ -715,7 +715,7 @@ private void refreshUserMenu() {
         mensaje.setHeaderText("Creado por: \n"
                 + "     Clara Lorena Zaharia Balán \n"
                 + "     Marcos Yerbes Martínez \n"
-                + "     Marta Bauza Medrano \n"
+                + "     Marta Bauzá Medrano \n"
                 + "     Javier López Bellver");
         mensaje.showAndWait(); // Bloquea hasta que el usuario cierra el diálogo
         
