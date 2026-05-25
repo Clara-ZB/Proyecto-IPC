@@ -744,7 +744,6 @@ private void refreshUserMenu() {
      */
     @FXML
     private void showPosition(MouseEvent event) {
-        if (puntosRuta == null) return;
         mousePosition.setText(
             "sceneX: " + (int) event.getSceneX() +
             ", sceneY: " + (int) event.getSceneY() + "\n" +
@@ -752,6 +751,7 @@ private void refreshUserMenu() {
             ",          Y: " + (int) event.getY()
         );
         
+        if (puntosRuta == null) return;
         GeoPoint posActual = new GeoPoint(event.getSceneX(), event.getSceneY());
         if (puntosRuta.contains(posActual)) {
             /**Esto es probablemente la linea de codigo mas larga que he escrito en mi vida asique sientate que te intento explicar como funciona
