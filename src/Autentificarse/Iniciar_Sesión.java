@@ -39,7 +39,7 @@ public class Iniciar_Sesión implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
 
     @FXML
@@ -60,7 +60,7 @@ public class Iniciar_Sesión implements Initializable {
         
         if(ISCorrecto){
             System.out.println("Sesion iniciada correctamente");
-             Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
             ventana.close();
         }else{
             errorIS.setText("Usuario o contraseña incorrectos");

@@ -68,16 +68,13 @@ public class ModificarController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         txtUsuario.setDisable(true);
-
         avatarDefault = new Image(getClass().getResource("/resources/user.jpg").toExternalForm());
 
         Circle circulo = new Circle();
         circulo.setRadius(60);
         circulo.setCenterX(60);
         circulo.setCenterY(60);
-
         avatar.setClip(circulo);
 
         SportActivityApp app = SportActivityApp.getInstance();
@@ -117,14 +114,12 @@ public class ModificarController implements Initializable {
 
     @FXML
     private void handleCancelar(ActionEvent event) {
-
         Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
         ventana.close();
     }
 
     @FXML
     private void handleRegistrar(ActionEvent event) {
-
         String email = txtEmail.getText().trim();
         String password = txtContraseña.getText();
         LocalDate fechaNacimiento =txtFechaNacimiento.getValue();
@@ -139,13 +134,13 @@ public class ModificarController implements Initializable {
             errorEmail.setText("Formato email incorrecto");
             valido = false;
         }
-
-        if(!password.isEmpty()&& !User.checkPassword(password)){
+        
+        if(!password.isEmpty() && !User.checkPassword(password)){
             errorContraseña.setText("Contraseña incorrecta");
             valido = false;
         }
 
-        if(fechaNacimiento == null|| !User.isOlderThan(fechaNacimiento,12)){
+        if(fechaNacimiento == null || !User.isOlderThan(fechaNacimiento, 12)){
             errorFechaNacimiento.setText("Debes tener más de 12 años");
             valido = false;
         }
@@ -154,14 +149,14 @@ public class ModificarController implements Initializable {
             return;
         }
 
-        SportActivityApp app =SportActivityApp.getInstance();
+        SportActivityApp app = SportActivityApp.getInstance();
         User usuario = app.getCurrentUser();
 
         if(password.isEmpty()){
             password = usuario.getPassword();
         }
 
-        app.updateCurrentUser(email,password,fechaNacimiento,avatarPath);
+        app.updateCurrentUser(email, password, fechaNacimiento, avatarPath);
         System.out.println("Perfil modificado correctamente");
         Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
         ventana.close();

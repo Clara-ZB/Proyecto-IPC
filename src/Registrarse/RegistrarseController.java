@@ -70,38 +70,28 @@ public class RegistrarseController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        avatarDefault = new Image(
-                getClass().getResource("/resources/user.jpg").toExternalForm()
-        );
+        avatarDefault = new Image(getClass().getResource("/resources/user.jpg").toExternalForm());
         avatar.setImage(avatarDefault);
         
         Circle circulo = new Circle();
         circulo.setRadius(60);
         circulo.setCenterX(60);
         circulo.setCenterY(60);
-        
         avatar.setClip(circulo);
         
         errorUsuario.setWrappingWidth(250);
         errorContraseña.setWrappingWidth(250);
-        
-           
     }    
 
     @FXML
     private void handleBorrar(ActionEvent event) {
         avatar.setImage(avatarDefault);
-         
     }
 
     @FXML
     private void handleSeleccionar(ActionEvent event) {
-        FileChooser seleccionarAvatar = new FileChooser();
-        
-        seleccionarAvatar.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Imagenes", "*.png", "*.jpg", "*.jpeg")
-        );
-        
+        FileChooser seleccionarAvatar = new FileChooser(); 
+        seleccionarAvatar.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagenes", "*.png", "*.jpg", "*.jpeg"));
         File archivo = seleccionarAvatar.showOpenDialog(avatar.getScene().getWindow());
         
         if(archivo != null){
@@ -109,8 +99,6 @@ public class RegistrarseController implements Initializable {
             Image imagen = new Image(archivo.toURI().toString());
             avatar.setImage(imagen);
         }
-        
-        
     }
 
     @FXML
@@ -121,7 +109,6 @@ public class RegistrarseController implements Initializable {
 
     @FXML
     private void handleRegistrar(ActionEvent event) {
-        
         String usuario = txtUsuario.getText();
         String email = txtEmail.getText();
         String contraseña = txtContraseña.getText();
@@ -138,21 +125,23 @@ public class RegistrarseController implements Initializable {
             errorUsuario.setText("Usuario inválido: entre 6 y 15 caracteres, solo letras, dígitos, guion o subguion.  ");
             valido = false;
         }
+        
         if(!User.checkEmail(email)){
             errorEmail.setText("Formato inválido: usuario@dominio.");
             valido = false;
         }
+        
         if(!User.checkPassword(contraseña)){
-            errorContraseña.setText("Contraseña inválida: de 8-20 caracteres, " 
-                    + "con al menos una mayúscula, una minúscula, un dígito y un símbolo");
+            errorContraseña.setText("Contraseña inválida: de 8-20 caracteres, con al menos una mayúscula, una minúscula, un dígito y un símbolo");
             valido = false;
         }
+        
         if(fecha_nacimiento == null || !User.isOlderThan(fecha_nacimiento, 12)){
             errorFechaNacimiento.setText("Debes tener más de 12 años");
             valido = false;
         }
+        
         if(!valido){
-            
             return;
         }
         
@@ -167,6 +156,4 @@ public class RegistrarseController implements Initializable {
             errorUsuario.setText("El usuario ya existe");
         }
     }
-    
-    
 }
