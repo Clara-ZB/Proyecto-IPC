@@ -73,17 +73,18 @@ public class RegistrarseController implements Initializable {
         avatarDefault = new Image(
                 getClass().getResource("/resources/user.jpg").toExternalForm()
         );
-        
-        
         avatar.setImage(avatarDefault);
         
         Circle circulo = new Circle();
-        
         circulo.setRadius(60);
         circulo.setCenterX(60);
         circulo.setCenterY(60);
         
         avatar.setClip(circulo);
+        
+        errorUsuario.setWrappingWidth(250);
+        errorContraseña.setWrappingWidth(250);
+        
            
     }    
 
@@ -135,7 +136,7 @@ public class RegistrarseController implements Initializable {
         errorFechaNacimiento.setText("");
         
         if(!User.checkNickName(usuario)){
-            errorUsuario.setText("Usuario inválido:entre 6 y 15 caracteres, solo letras, dígitos, guion o subguion.  ");
+            errorUsuario.setText("Usuario inválido: entre 6 y 15 caracteres, solo letras, dígitos, guion o subguion.  ");
             valido = false;
         }
         if(!User.checkEmail(email)){
@@ -143,9 +144,8 @@ public class RegistrarseController implements Initializable {
             valido = false;
         }
         if(!User.checkPassword(contraseña)){
-            errorContraseña.setText("Contraseña inválida:entre 8 y 20 caracteres, " 
-                    + "con al menos una mayúscula, una minúscula, un \n" +
-                    "dígito y un símbolo (!@#$%&*()-+=)");
+            errorContraseña.setText("Contraseña inválida: de 8-20 caracteres, " 
+                    + "con al menos una mayúscula, una minúscula, un dígito y un símbolo");
             valido = false;
         }
         if(fecha_nacimiento == null || !User.isOlderThan(fecha_nacimiento, 12)){
@@ -156,9 +156,7 @@ public class RegistrarseController implements Initializable {
             
             return;
         }
-        //errorUsuario.setText("");
-        //errorEmail.setText("");
-        //errorContraseña.setText("");
+        
         SportActivityApp app = SportActivityApp.getInstance();
         boolean registrado = app.registerUser(usuario, email, contraseña, fecha_nacimiento, avatarPath);
         
