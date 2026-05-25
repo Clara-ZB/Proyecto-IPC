@@ -504,9 +504,9 @@ private void refreshUserMenu() {
         try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Modificar/Modificar.fxml"));
         Parent root = (Parent) loader.load();
-         Scene scene = new Scene(root, 600, 400);
+        
         Stage stage = new Stage();
-        stage.setScene(scene);
+        
         stage.setTitle("Modificar perfil");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
