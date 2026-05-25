@@ -19,6 +19,7 @@ import upv.ipc.sportlib.Session;
 import upv.ipc.sportlib.SportActivityApp;
 import  javafx.scene.control.ListCell;
 import javafx.scene.control.Cell;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -114,7 +115,9 @@ public class HistorialController implements Initializable {
             grid.setHgap(10);
             grid.setVgap(10);
             grid.setPadding(new Insets(10));    //margenes internos
-
+            
+            grid.getColumnConstraints().add(new ColumnConstraints(290)); // column 0 is 100 wide
+            grid.getColumnConstraints().add(new ColumnConstraints(240)); // column 1 is 200 wide
             grid.add(numSesion, 0, 0);
             grid.add(fechaSesion, 0, 1);
             grid.add(durSesion, 1, 0);
@@ -136,9 +139,10 @@ public class HistorialController implements Initializable {
                 setGraphic(null);
             }else {
             setGraphic(grid);
-            numSesion.setText("Sesión " + getListView().getItems().size());
-            fechaSesion.setText(item.getStartTime().toString());
-            durSesion.setText(item.getDuration().toHours() + " h " + item.getDuration().toMinutes() + " m ");
+            numSesion.setText("Sesión ");
+            fechaSesion.setText(item.getStartTime().toString().substring(0, 10)  + " a las " + item.getStartTime().toString().substring(11, 16));
+            
+            durSesion.setText(item.getDuration().toHours() + " h " + (item.getDuration().toMinutes()%60) + " m " + (item.getDuration().toSeconds()%60) + " s ");
             actSesion.setText(item.getImportedActivities() + " actividades importadas");
             vistasSesion.setText(item.getViewedActivities() + " actividades vistas");
             anotSesion.setText(item.getAnnotationsCreated() + " anotaciones creadas");
