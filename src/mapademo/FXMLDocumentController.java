@@ -221,7 +221,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button botonAltura;
     @FXML
-    private LineChart<?, ?> mapaAltura;
+    private LineChart<Number, Number> mapaAltura;
     @FXML
     private Label velLabel;
     
@@ -309,88 +309,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     void listClicked(MouseEvent event) {
-        // Obtenemos el POI seleccionado; si no hay ninguno, salimos
-        /*Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
-        if (itemSelected == null) return;
-
-        // ── Dimensiones del mapa con el zoom actual aplicado ──────────
-        double mapWidth  = mapPane.getWidth()  * zoomGroup.getScaleX();
-        double mapHeight = mapPane.getHeight() * zoomGroup.getScaleY();
-
-        // ── Posición del POI escalada ──────────────────────────────────
-        // getPosition() devuelve las coordenadas en el sistema local del
-        // mapPane (sin zoom). Las multiplicamos por el factor de escala
-        // para obtener la posición real en pantalla.
-        double poiX = itemSelected.getPosition().getX() * zoomGroup.getScaleX();
-        double poiY = itemSelected.getPosition().getY() * zoomGroup.getScaleY();
-
-        // ── Tamaño visible del ScrollPane (viewport) ───────────────────
-        double viewW = map_scrollpane.getViewportBounds().getWidth();
-        double viewH = map_scrollpane.getViewportBounds().getHeight();
-
-        // ── Cálculo del scroll normalizado [0, 1] ─────────────────────
-        // Restamos la mitad del viewport para que el POI quede centrado
-        // y no en la esquina superior-izquierda del área visible.
-        double scrollH = (poiX - viewW / 2) / (mapWidth  - viewW);
-        double scrollV = (poiY - viewH / 2) / (mapHeight - viewH);
-
-        // Garantizamos que el valor esté dentro del rango válido [0, 1]
-        scrollH = Math.max(0, Math.min(1, scrollH));
-        scrollV = Math.max(0, Math.min(1, scrollV));
-
-        // ── Animación suave con Timeline ──────────────────────────────
-        // Timeline interpola los valores de las propiedades a lo largo
-        // del tiempo. KeyValue define qué propiedad animar y hasta qué
-        // valor; KeyFrame define en qué instante se alcanza ese valor.
-        final Timeline timeline = new Timeline();
-        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
-        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
-        final KeyFrame kf  = new KeyFrame(Duration.millis(500), kv1, kv2);
-        timeline.getKeyFrames().add(kf);
-        timeline.play(); // Inicia la animación (no bloquea el hilo de la UI)
-*/
-        
-        // Cogemos la actividad seleccionada en la lista
-        Activity actividadActual = map_listview.getItems().get(map_listview.getSelectionModel().getSelectedIndex());
-        
-        // Definimos la region de la actividad, junto a su imagen y proyección
-        MapRegion region = actividadActual.getSuggestedMap();
-        Image img = new Image(new File(region.getImagePath()).toURI().toString());
-        MapProjection proj = new MapProjection(region, img.getWidth(), img.getHeight());
-        
-        // Creamos la ruta y le añadimos todos los puntos
-        Polyline ruta = new Polyline();
-        for (TrackPoint tp:actividadActual.getTrackPoints()) {
-            Point2D p = proj.project(tp);
-            ruta.getPoints().addAll(p.getX(), p.getY());
-        }
-        
-        // Añadimos la ruta al mapPane
-        mapPane.getChildren().add(ruta);
-        
-        List<Annotation> anotaciones = map_listview.getSelectionModel().getSelectedItem().getAnnotations();
-        for (int i = 0; i < anotaciones.size(); i++) {
-            Annotation actual = anotaciones.get(i);
-            switch(actual.getType()) {
-                case AnnotationType.CIRCLE: addCircle(actual); break;
-                case AnnotationType.POINT: addPoint(actual); break;
-                case AnnotationType.LINE: addLine(actual); break;
-                case AnnotationType.TEXT: addText(actual); break;
-            }
-        }
-        
-        XYChart.Series series = new XYChart.Series();
-        for (int i = 0; i < map_listview.getSelectionModel().getSelectedItem().getTrackPoints().size(); i++) {
-            series.getData().add(new XYChart.Data<>(i, map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getElevation()));
-        }
-        mapaAltura.getData().add(series);
-        
-        //Paso la lista de TrackPoints a una lista de GeoPoints para poder trabajar con ella
-        //Esto no lo uso aqui se usa en showPosition() pero como tenga que crear la lista cada vez que mueves el raton esto va a gastar mas CPU que minar crypto
-        puntosRuta = null;
-        for (int i=0; i < map_listview.getSelectionModel().getSelectedItem().getTrackPoints().size(); i++) {
-            puntosRuta.add(new GeoPoint((int) map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getLatitude(),(int) map_listview.getSelectionModel().getSelectedItem().getTrackPoints().get(i).getLongitude()));
-        }
+        //Movemos la lógica a los métodos pintarRutaEnMapa y pintarPerfilAltitud
     }
     
     /**
@@ -453,6 +372,8 @@ private void refreshUserMenu() {
         map_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null) {
                 mostrarEstadisticas(newAct);
+                pintarRutaEnMapa(newAct);
+                pintarPerfilAltitud(newAct);
             } else {
                 clearStats();
             }
@@ -1149,4 +1070,50 @@ private void refreshUserMenu() {
         if (mapaAltura.getHeight() < 50) { mapaAltura.setPrefHeight(200); } else mapaAltura.setPrefHeight(1);
 
     }
+    
+    private void pintarRutaEnMapa(Activity actividadActual) {
+    MapRegion region = actividadActual.getSuggestedMap();
+    System.out.println("Imagen mapa: " + region.getImagePath());
+    Image img = new Image(new File(region.getImagePath()).toURI().toString());
+    System.out.println("Tamaño imagen: " + img.getWidth() + "x" + img.getHeight());
+    MapProjection proj = new MapProjection(region, img.getWidth(), img.getHeight());
+
+    Polyline ruta = new Polyline();
+    for (TrackPoint tp : actividadActual.getTrackPoints()) {
+        Point2D p = proj.project(tp);
+        ruta.getPoints().addAll(p.getX(), p.getY());
+    }
+    System.out.println("Total puntos ruta: " + ruta.getPoints().size());
+    System.out.println("Tamaño mapPane: " + mapPane.getWidth() + "x" + mapPane.getHeight());
+    mapPane.getChildren().add(ruta);
+
+    List<Annotation> anotaciones = actividadActual.getAnnotations();
+    for (Annotation actual : anotaciones) {
+        switch(actual.getType()) {
+            case AnnotationType.CIRCLE: addCircle(actual); break;
+            case AnnotationType.POINT: addPoint(actual); break;
+            case AnnotationType.LINE: addLine(actual); break;
+            case AnnotationType.TEXT: addText(actual); break;
+        }
+    }
+
+    
+    puntosRuta = new java.util.ArrayList<>();
+    for (TrackPoint tp : actividadActual.getTrackPoints()) {
+        puntosRuta.add(new GeoPoint(
+            (int) tp.getLatitude(),
+            (int) tp.getLongitude()
+        ));
+    }
+}
+    
+    private void pintarPerfilAltitud(Activity actividadActual) {
+    mapaAltura.getData().clear();
+    XYChart.Series<Number, Number> series = new XYChart.Series<>();
+    List<TrackPoint> puntos = actividadActual.getTrackPoints();
+    for (int i = 0; i < puntos.size(); i++) {
+        series.getData().add(new XYChart.Data<>(i, puntos.get(i).getElevation()));
+    }
+    mapaAltura.getData().add(series);
+}
 }

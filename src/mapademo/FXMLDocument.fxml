@@ -106,7 +106,7 @@
                   <Button fx:id="botonAltura" minWidth="-Infinity" mnemonicParsing="false" onAction="#mostrarMapaAltura" prefWidth="50.0" text="Altura" />
                   <LineChart fx:id="mapaAltura" minHeight="-Infinity" prefHeight="1.0" visible="false">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                      <NumberAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis side="LEFT" />
