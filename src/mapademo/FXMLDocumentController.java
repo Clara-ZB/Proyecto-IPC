@@ -504,7 +504,7 @@ private void refreshUserMenu() {
         try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Modificar/Modificar.fxml"));
         Parent root = (Parent) loader.load();
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 400, 600);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Modificar perfil");
