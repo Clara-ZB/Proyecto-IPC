@@ -971,6 +971,14 @@ private void refreshUserMenu() {
      */
     private void addAnnotation(double x, double y) {
         try {
+            SportActivityApp app = SportActivityApp.getInstance();
+            if (app.getCurrentUser() == null || map_listview.getSelectionModel().getSelectedItem() == null) {
+                Alert notLogged = new Alert(Alert.AlertType.ERROR, "No puedes añadir actividades sin identificarte y seleccionar una actividad", ButtonType.CLOSE);
+                notLogged.setHeaderText("Problema al añadir anotación");
+                notLogged.showAndWait();
+                return;
+            }
+            
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Anotaciones/Anotaciones.fxml"));
             Parent root = (Parent) fxmlLoader.load();
             Scene scene = new Scene(root, 600, 400);
@@ -983,11 +991,8 @@ private void refreshUserMenu() {
             ventanaAnotación.showAndWait();
             
             
-            SportActivityApp app = SportActivityApp.getInstance();
-            
-            
             Annotation anotacionActual = anot.getAnnotation();
-            //app.addAnnotation(map_listview.getSelectionModel().getSelectedItem(), anotacionActual);
+            app.addAnnotation(map_listview.getSelectionModel().getSelectedItem(), anotacionActual);
             switch(anotacionActual.getType()) {
                 case AnnotationType.CIRCLE: addCircle(anotacionActual); break;
                 case AnnotationType.POINT: addPoint(anotacionActual); break;
