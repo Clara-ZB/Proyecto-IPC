@@ -117,7 +117,6 @@ public class RegistrarseController implements Initializable {
     private void handleCancelar(ActionEvent event) {
         Stage registro = (Stage)((Node)event.getSource()).getScene().getWindow();
         registro.close();
-        
     }
 
     @FXML
