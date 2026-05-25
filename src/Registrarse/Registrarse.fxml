@@ -57,7 +57,7 @@
             <Text fx:id="errorFechaNacimiento" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Text fx:id="errorContraseña" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <DatePicker fx:id="txtFechaNacimiento" prefHeight="26.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Text fx:id="errorUsuario" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Text fx:id="errorUsuario" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
       <HBox alignment="BOTTOM_CENTER" layoutX="28.0" layoutY="468.0" prefHeight="100.0" prefWidth="344.0" spacing="215.0">
