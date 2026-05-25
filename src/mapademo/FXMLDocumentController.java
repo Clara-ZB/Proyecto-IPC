@@ -744,6 +744,7 @@ private void refreshUserMenu() {
      */
     @FXML
     private void showPosition(MouseEvent event) {
+        if (puntosRuta == null) return;
         mousePosition.setText(
             "sceneX: " + (int) event.getSceneX() +
             ", sceneY: " + (int) event.getSceneY() + "\n" +
