@@ -17,12 +17,12 @@
    <children>
       <HBox alignment="TOP_CENTER" layoutX="61.0" layoutY="176.0" prefHeight="58.0" prefWidth="278.0" spacing="20.0">
          <children>
-            <Button fx:id="btnBorrar" mnemonicParsing="false" onAction="#handleBorrar" text="Borrar">
+            <Button fx:id="btnBorrar" mnemonicParsing="false" onAction="#handleBorrar" style="-fx-background-color: #D2D4D6;" text="Borrar">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnSeleccionar" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleSeleccionar" text="Seleccionar">
+            <Button fx:id="btnSeleccionar" alignment="TOP_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleSeleccionar" style="-fx-background-color: #D2D4D6;" text="Seleccionar">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -61,8 +61,8 @@
       </GridPane>
       <HBox alignment="BOTTOM_CENTER" layoutX="28.0" layoutY="468.0" prefHeight="100.0" prefWidth="344.0" spacing="215.0">
          <children>
-            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#handleCancelar" text="Cancelar" />
-            <Button fx:id="btnRegistrar" alignment="CENTER" mnemonicParsing="false" onAction="#handleRegistrar" text="Registrar" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#handleCancelar" style="-fx-background-color: #E6655A;" text="Cancelar" textFill="WHITE" />
+            <Button fx:id="btnRegistrar" alignment="CENTER" mnemonicParsing="false" onAction="#handleRegistrar" style="-fx-background-color: #6AA0E6;" text="Registrar" textFill="WHITE" />
          </children>
       </HBox>
       <ImageView fx:id="avatar" fitHeight="120.0" fitWidth="120.0" layoutX="140.0" layoutY="36.0" pickOnBounds="true" />

@@ -33,8 +33,8 @@
       </GridPane>
       <HBox alignment="BOTTOM_CENTER" layoutX="17.0" layoutY="246.0" prefHeight="40.0" prefWidth="366.0" spacing="220.0">
          <children>
-            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#handleCancelar" text="Cancelar" />
-            <Button fx:id="btnIS" mnemonicParsing="false" onAction="#handleIS" text="Iniciar sesión" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#handleCancelar" style="-fx-background-color: #E6655A;" text="Cancelar" textFill="WHITE" />
+            <Button fx:id="btnIS" mnemonicParsing="false" onAction="#handleIS" style="-fx-background-color: #6AA0E6;" text="Iniciar sesión" textFill="WHITE" />
          </children>
       </HBox>
    </children>
