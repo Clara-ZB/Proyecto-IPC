@@ -5,7 +5,8 @@
 package Historial;
 
 import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -26,7 +27,7 @@ import javafx.scene.layout.GridPane;
  * @author Clara <clzahbal@etsinf.upv.es>
  */
 public class HistorialController implements Initializable {
-    
+    private final SportActivityApp app = SportActivityApp.getInstance();
     private List<Session> lista;
     private int horasT;
     private int minTot;
@@ -58,7 +59,6 @@ public class HistorialController implements Initializable {
         vistas = 0;
         anotaciones = 0;
         listaObs = null;
-        SportActivityApp app = SportActivityApp.getInstance();
         //recorro toda al lista para recalcular estadísticas globales 
         lista = app.getSessionsByUser(app.getCurrentUser());
         listaObs.setAll(lista);

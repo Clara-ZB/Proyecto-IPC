@@ -438,14 +438,15 @@ private void refreshUserMenu() {
     }
     private void openHistorialDialog() {
         try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Historial de sesiones");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-        refreshUserMenu();
+          FXMLLoader loader = new FXMLLoader(getClass().getResource("/Historial/Historial.fxml"));
+          Parent root = (Parent) loader.load();
+          Scene scene = new Scene(root);
+          Stage stage = new Stage();
+          stage.setScene(scene);
+          stage.setTitle("Historial de sesiones");
+          stage.initModality(Modality.APPLICATION_MODAL);
+          stage.showAndWait();
+          refreshUserMenu();
     } catch (IOException ex) {
         showError("No se pudo abrir el historial.");
     }
