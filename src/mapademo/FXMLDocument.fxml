@@ -21,29 +21,42 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
+<BorderPane style="-fx-background-color: #474543;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
    <center>
       <VBox prefHeight="556.0" prefWidth="853.0" stylesheets="@../resources/estilos.css">
          <children>
             <SplitPane fx:id="splitPane" dividerPositions="0.19699727024567792" VBox.vgrow="ALWAYS">
                <items>
-                  <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="sidePanel" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #474543;">
                      <children>
-                        <Button fx:id="btnAddActividad" mnemonicParsing="false" onAction="#onAddActividad" text="Añadir actividad" />
-                        <Label text="Actividades:" />
-                        <ListView fx:id="map_listview" prefHeight="250.0" prefWidth="87.0" />
-                        <Label text="Estadísticas:" />
-                        <VBox prefHeight="297.0" prefWidth="167.0">
+                        <Button fx:id="btnAddActividad" alignment="CENTER" mnemonicParsing="false" onAction="#onAddActividad" style="-fx-background-color: #E8E8E3;" text="Añadir actividad">
+                           <VBox.margin>
+                              <Insets bottom="7.0" left="30.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Label text="Actividades:" textFill="WHITE">
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin></Label>
+                        <ListView fx:id="map_listview" prefHeight="250.0" prefWidth="87.0" style="-fx-background-color: #E8E8E3;" />
+                        <Label text="Estadísticas:" textFill="WHITE">
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin></Label>
+                        <VBox prefHeight="297.0" prefWidth="167.0" style="-fx-background-color: #474543;">
                            <children>
-                              <Label fx:id="lblDistancia" text="Distancia: -" />
-                              <Label fx:id="lblDuracion" text="Duración: -" />
-                              <Label fx:id="lblVelMedia" text="Vel. Media: -" />
-                              <Label fx:id="lblRitmo" text="Ritmo medio: -" />
-                              <Label fx:id="lblDesnivelPos" text="Desnivel +: -" />
-                              <Label fx:id="lblDesnivelNeg" text="Desnivel -: -" />
-                              <Label fx:id="lblAltMin" text="Altitud Min: -" />
-                              <Label fx:id="lblAltMax" text="Altitud Max: -" />
+                              <Label fx:id="lblDistancia" text="Distancia: -" textFill="WHITE" />
+                              <Label fx:id="lblDuracion" text="Duración: -" textFill="WHITE" />
+                              <Label fx:id="lblVelMedia" text="Vel. Media: -" textFill="WHITE" />
+                              <Label fx:id="lblRitmo" text="Ritmo medio: -" textFill="WHITE" />
+                              <Label fx:id="lblDesnivelPos" text="Desnivel +: -" textFill="WHITE" />
+                              <Label fx:id="lblDesnivelNeg" text="Desnivel -: -" textFill="WHITE" />
+                              <Label fx:id="lblAltMin" text="Altitud Min: -" textFill="WHITE" />
+                              <Label fx:id="lblAltMax" text="Altitud Max: -" textFill="WHITE" />
                            </children>
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
                         </VBox>
                      </children>
                   </VBox>
@@ -68,7 +81,7 @@
    <top>
       <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar>
+            <MenuBar prefHeight="25.0" style="-fx-background-color: #E8E8E3; -fx-background-radius: 4;">
               <menus>
                 <Menu mnemonicParsing="false" text="Ayuda">
                   <items>
@@ -77,10 +90,10 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Button mnemonicParsing="false" onAction="#cambiarMapa" text="Cambiar mapa" />
-            <Button fx:id="btnActividadMensual" mnemonicParsing="false" onAction="#onActividadMensual" text="Actividad Mensual" />
+            <Button mnemonicParsing="false" onAction="#cambiarMapa" style="-fx-background-color: #E8E8E3;" text="Cambiar mapa" />
+            <Button fx:id="btnActividadMensual" mnemonicParsing="false" onAction="#onActividadMensual" style="-fx-background-color: #E8E8E3;" text="Actividad Mensual" />
             <HBox prefHeight="65.0" prefWidth="458.0" HBox.hgrow="ALWAYS" />
-            <MenuButton fx:id="menuUsuario" mnemonicParsing="false" text="Identificarse">
+            <MenuButton fx:id="menuUsuario" mnemonicParsing="false" style="-fx-background-color: #E8E8E3;" text="Identificarse">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
@@ -96,13 +109,16 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="841.0" BorderPane.alignment="CENTER">
          <children>
-            <Label minWidth="-Infinity" prefWidth="40.0" text="Zoom" />
-            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomOut" prefWidth="28.0" text="-" />
+            <Label minWidth="-Infinity" prefWidth="40.0" text="Zoom" textFill="WHITE" />
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomOut" prefWidth="28.0" style="-fx-background-color: #E8E8E3;" text="-" />
             <Slider fx:id="zoom_slider" />
-            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomIn" prefWidth="28.0" text="+" />
+            <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#zoomIn" prefWidth="28.0" style="-fx-background-color: #E8E8E3;" text="+" />
             <HBox prefHeight="33.0" prefWidth="521.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="botonAltura" minWidth="-Infinity" mnemonicParsing="false" onAction="#mostrarMapaAltura" prefWidth="50.0" text="Altura" />
+                  <Button fx:id="botonAltura" minWidth="-Infinity" mnemonicParsing="false" onAction="#mostrarMapaAltura" prefWidth="50.0" style="-fx-background-color: #E8E8E3;" text="Altura">
+                     <HBox.margin>
+                        <Insets left="10.0" top="4.0" />
+                     </HBox.margin></Button>
                   <LineChart fx:id="mapaAltura" minHeight="-Infinity" prefHeight="1.0" visible="false">
                     <xAxis>
                       <NumberAxis side="BOTTOM" />
@@ -112,8 +128,8 @@
                     </yAxis>
                   </LineChart>
                </children></HBox>
-            <Label fx:id="velLabel" minWidth="-Infinity" prefWidth="45.0" text="vel:        " />
-            <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " wrapText="true" HBox.hgrow="ALWAYS" />
+            <Label fx:id="velLabel" minWidth="-Infinity" prefWidth="45.0" text="vel:        " textFill="WHITE" visible="false" />
+            <Label fx:id="mousePosition" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " textFill="WHITE" wrapText="true" HBox.hgrow="ALWAYS" />
          </children>
          <BorderPane.margin>
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
