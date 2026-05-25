@@ -59,7 +59,7 @@ public class Iniciar_Sesión implements Initializable {
         boolean ISCorrecto = app.login(usuario, contraseña);
         
         if(ISCorrecto){
-            System.out.println("Sesión iniciada correctamente");
+            System.out.println("Sesion iniciada correctamente");
              Stage ventana = (Stage)((Node)event.getSource()).getScene().getWindow();
             ventana.close();
         }else{
